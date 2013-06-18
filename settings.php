@@ -2,6 +2,8 @@
 
 $newpassword = $_POST['newpassword'];
 $userTimeZone = $_POST['userTimeZone'];
+$userDonation = $_POST['userDonation'];
+
 
 if ($newpassword <> '') {
 
@@ -22,6 +24,18 @@ if ($userTimeZone <> '') {
 	file_put_contents($file, $content);
 
 }
+
+if ($userDonation <> '') {
+
+ 
+	$file = '/opt/minepeon/etc/donation';
+	$content = $userDonation;
+
+	file_put_contents($file, $content);
+
+}
+
+$donation = file_get_contents("/opt/minepeon/etc/donation");
 
 include('ssl.inc.php');
 include('timezone.inc.php');
@@ -79,10 +93,23 @@ include('menu.php');
         <div class="container">
 				<h1>Settings</h1>
 				<form name="input" action="/settings.php" method="post">
-					New Password: <input type="text" value="" name="newpassword">
-					<input type="submit" value="Set"><br>
-					TimeZone: <?php echo $tzselect ?>
-					<input type="submit" value="Set"><br>
+					<table border="0">
+					<tr>
+					<td>New Password: </td>
+					<td><input type="text" value="" name="newpassword">
+					<input type="submit" value="Set"></td>
+					</tr>
+					<tr>
+					<td>TimeZone: </td>
+					<td><?php echo $tzselect ?>
+					<input type="submit" value="Set"></td>
+					</tr>
+					<tr>
+					<td>Donation (Minutes per 24 hours): </td>
+					<td><input type="text" value="<?php echo $donation ?>" name="userDonation">
+					<input type="submit" value="Set"></td>
+					</tr>
+					<table>
 					</form>
 					
         </div>
