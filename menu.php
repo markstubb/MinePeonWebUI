@@ -9,7 +9,7 @@
           <a class="brand" href="http://mineforeman.com/minepeon/">MinePeon</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-                        <li><a href="/">Graphs</a></li>
+                        <li><a href="/">Status</a></li>
               		<li><a href="pools.php">Pools</a></li>
                         <li><a href="settings.php">Settings</a></li>
               		<li><a href="about.php">About</a></li>

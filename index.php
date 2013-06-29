@@ -34,25 +34,26 @@ function create_graph($output, $start, $title) {
 $stats = cgminer("devs", "");
 $status = $stats['STATUS'];
 $devs = $stats['DEVS'];
-
-
+$summary = cgminer("summary", "");
+$pools = cgminer("pools", "");
 
 include('head.php');
 include('menu.php');
 ?>
-
-	<div>
-		<?php if($donation == 0) { ?><embed height="0" width="0" src="inc/kitten.mp3"><?php } ?>
-	</div>
 	<div class="container">
-		<h1>Graphs</h1>
-			<center>Update Time: <?php echo date('D, d M Y H:i:s T') ?><center>
+			<center><h3>Update Time: <?php echo date('D, d M Y H:i:s T') ?></h3><center>
 			<div class=graph><img src="rrd/mhsav-hour.png" alt="mhsav.png" /></div>
 			<div class=graph><img src="rrd/mhsav-day.png" alt="mhsav.png" /><img src="rrd/mhsav-week.png" alt="mhsav.png" /></div>
 		<div class=graph><img src="rrd/mhsav-month.png" alt="mhsav.png" /><img src="rrd/mhsav-year.png" alt="mhsav.png" /></div>
 	</div>
-
-
+	<div class="container">
+		<br />
+		<table id="status" class="table table-striped table-bordered table-hover table-condensed">
+			<tr>
+				<td><?php echo $summary['STATUS'][0]['Description']; ?></td>
+			</tr>
+		</table>
+	</div>
 	<div class="container">
 		<table id="stats" class="tablesorter table table-striped table-bordered table-hover table-condensed stats">
 			<thead> 
@@ -71,33 +72,18 @@ include('menu.php');
 			<tbody>
 			<?php echo statsTable($devs);  ?>
 		</table>
-
 	</div>
-		<?php if($donation == 0) { ?>
-		<div class="container">
-			<fieldset>
-				<legend>Plea</legend>
-				<p>Please reconsider your decision to give back absolutely nothing to the project that is currently running your miners. A lot of time and effort has gone into making MinePeon what it is today and a small token of 15 minutes of your hash power would be greatly appreciated and will continue to fund the ongoing development and support of MinePeon.  </p>
-				<p>It is such a small amount and well below the normal variance in bitcoin mining you will not even notice the difference. If you work it out for every 1 GH/s you have it is 0.00027 bitcoin a day, ask yourself, is that really too much to support MinePeon?  Are you really that cheap?</p>
-				<p>Some of the features that I would like to include are;-</p>
-				<ul>
-					<li>TFT Display</li>
-					<li>LCD Display</li>
-					<li>Android app</li> 
-					<li>iOS app</li>
-					<li>Live Update</li>
-					<li>SMS/Email Alerts</li>
-					<li>Backup/Restore</li>
-					<li>Cloud Control</li>
-					<li>VPN Tunneling (DDOS Protection & Anonymity)</li>
-				</ul>
-				<p>Most of those new features cost money to setup and run, I would prefer not to have to make features avalible as 'paied for' addons but it all depends on you.</p>
-				<p>Neil Fincham</p>
-				<p>The MineForeman</p>
-				<p>P.S. Every time you set donations to zero a kitten dies. <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>
-			</fieldset>
-		</div>
-		<?php } ?>
+	<div class="container">
+		<?php 
+		echo "<pre>";
+		print_r($summary);
+		echo "
+		";
+		print_r($pools);
+		echo "</pre>";
+		?>
+	</div>
+	<?php if($donation == 0) { echo $plea; } ?>
 <?php
 
 include('foot.php');
