@@ -48,15 +48,61 @@ include('menu.php');
 	</div>
 	<div class="container">
 		<br />
-		<table id="status" class="table table-striped table-bordered table-hover table-condensed">
+		<table id="status" class="table table-striped table-bordered table-hover table-condensed stats">
 			<tr>
-				<td><?php echo $summary['STATUS'][0]['Description']; ?></td>
+				<th colspan="6">MinePeon Status</th>
 			</tr>
+			<tr>
+				<th>MinePeon Version</th>
+				<th>Miner Version</th>
+				<th>MinePeon Uptime</th>	
+				<th>Miner Uptime</th>
+				<th>Best Share</th>
+				<th>Donation Minutes</th>
+			</tr>
+			<tr>
+				<td><?php echo $version; ?></td>
+				<td><?php echo $summary['STATUS'][0]['Description']; ?></td>
+				<td><?php echo secondsToWords(round($uptime[0])); ?></td>	
+				<td><?php echo secondsToWords($summary['SUMMARY'][0]['Elapsed']); ?></td>
+				<td><?php echo $summary['SUMMARY'][0]['BestShare']; ?></td>
+				<td><?php echo $donation; if ($donation == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></td>
+			</tr>
+		</table>
+	</div>
+	<div class="container">
+		<table id="pools" class="tablesorter table table-striped table-bordered table-hover table-condensed stats">
+			<thead> 
+			<tr>
+				<th colspan="17">Pool Status</th>
+			</tr>
+			<tr>
+				<th>URL</th>
+				<th>User</th>
+				<th>Status</th>
+				<th>Priority</th>
+				<th>Getworks</th>
+				<th>Accept</th>
+				<th>Reject</th>
+				<th>Discard</th>				
+				<th>Last <br />Share <br />Time</th>				
+				<th>Diff1 <br />Shares</th>				
+				<th>Difficulty <br />Accepted</th>
+				<th>Difficulty <br />Rejected</th>
+				<th>Last Share <br />Difficulty</th>
+				<th>Best <br />Share</th>			
+			</tr>
+			</thead>
+			<tbody>
+			<?php echo poolsTable($pools['POOLS']);  ?>
 		</table>
 	</div>
 	<div class="container">
 		<table id="stats" class="tablesorter table table-striped table-bordered table-hover table-condensed stats">
 			<thead> 
+			<tr>
+				<th colspan="9">Device Status</th>
+			</tr>
 			<tr>
 				<th>Name</th>
 				<th>ID</th>
@@ -73,16 +119,6 @@ include('menu.php');
 			<?php echo statsTable($devs);  ?>
 		</table>
 	</div>
-	<div class="container">
-		<?php 
-		echo "<pre>";
-		print_r($summary);
-		echo "
-		";
-		print_r($pools);
-		echo "</pre>";
-		?>
-	</div>
 	<?php if($donation == 0) { echo $plea; } ?>
 <?php
 
@@ -98,7 +134,7 @@ function statsTable($devs) {
 	$Utility = 0;
 
 	$tableRow = "";
-
+	
 	foreach ($devs as $dev) {
 		
 		if ($dev['MHS5s'] > 0) {
@@ -148,3 +184,78 @@ function statsTable($devs) {
 	return $tableRow;
 
 }
+
+function secondsToWords($seconds)
+{
+    $ret = "";
+
+    /*** get the days ***/
+    $days = intval(intval($seconds) / (3600*24));
+    if($days> 0)
+    {
+        $ret .= "$days days ";
+    }
+
+    /*** get the hours ***/
+    $hours = (intval($seconds) / 3600) % 24;
+    if($hours > 0)
+    {
+        $ret .= "$hours hours ";
+    }
+
+    /*** get the minutes ***/
+    $minutes = (intval($seconds) / 60) % 60;
+    if($minutes > 0)
+    {
+        $ret .= "$minutes minutes ";
+    }
+
+    /*** get the seconds ***/
+    $seconds = intval($seconds) % 60;
+    if ($seconds > 0) {
+        $ret .= "$seconds seconds";
+    }
+
+    return $ret;
+}
+
+function poolsTable($pools) {
+
+// class="success" error warning info
+
+	foreach ($pools as $pool) {
+
+		if ($pool['Status'] <> "Alive") {
+		
+			$rowclass = 'error';
+			
+		} else {
+		
+			$rowclass = '';
+			
+		}
+	
+		$table = $table . "
+			<tr  class='" . $rowclass . "'>
+				<td>" . $pool['URL'] . "</td>
+				<td>" . $pool['User'] . "</td>
+				<td>" . $pool['Status'] . "</td>
+				<td>" . $pool['Priority'] . "</td>
+				<td>" . $pool['Getworks'] . "</td>
+				<td>" . $pool['Accepted'] . "</td>
+				<td>" . $pool['Rejected'] . "</td>
+				<td>" . $pool['Discarded'] . "</td>				
+				<td>" . date('H:i:s', $pool['LastShareTime']) . "</td>				
+				<td>" . $pool['Diff1Shares'] . "</td>				
+				<td>" . $pool['DifficultyAccepted'] . "</td>
+				<td>" . $pool['DifficultyRejected'] . "</td>
+				<td>" . $pool['LastShareDifficulty'] . "</td>
+				<td>" . $pool['BestShare'] . "</td>			
+			</tr>";
+			
+	}
+	
+	return $table;
+			
+}
+
