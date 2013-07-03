@@ -46,6 +46,22 @@ table.stats td
 text-align: center;
 }
 
+table.pools 
+{
+}
+table.pools tr 
+{
+}
+table.pools th
+{
+text-align: center;
+}
+table.pools td 
+{
+text-align: center;
+font-size: 12px;
+}
+
 .graph 
 { 
 text-align: center; 

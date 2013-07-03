@@ -71,7 +71,7 @@ include('menu.php');
 		</table>
 	</div>
 	<div class="container">
-		<table id="pools" class="tablesorter table table-striped table-bordered table-hover table-condensed stats">
+		<table id="pools" class="tablesorter table table-striped table-bordered table-hover table-condensed pools">
 			<thead> 
 			<tr>
 				<th colspan="17">Pool Status</th>
@@ -112,7 +112,7 @@ include('menu.php');
 				<th>Reject</th>
 				<th>Error</th>
 				<th>Utility</th>
-				<th>Last Share Time</th>
+				<th>Last Share</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -243,8 +243,8 @@ function poolsTable($pools) {
 				<td>" . $pool['Priority'] . "</td>
 				<td>" . $pool['Getworks'] . "</td>
 				<td>" . $pool['Accepted'] . "</td>
-				<td>" . $pool['Rejected'] . "</td>
-				<td>" . $pool['Discarded'] . "</td>				
+				<td>" . $pool['Rejected'] . " ["  . round($pool['Accepted'] / $pool['Rejected'] / 100, 2) .  "%]</td>
+				<td>" . $pool['Discarded'] . " ["  . round($pool['Accepted'] / $pool['Discarded'] / 100, 2) .  "%]</td>				
 				<td>" . date('H:i:s', $pool['LastShareTime']) . "</td>				
 				<td>" . $pool['Diff1Shares'] . "</td>				
 				<td>" . $pool['DifficultyAccepted'] . "</td>
