@@ -144,7 +144,7 @@ function statsTable($devs) {
 				<td>" . $dev['Name'] . "</td>
 				<td>" . $dev['ID'] . "</td>
 				<td>" . $dev['Temperature'] . "</td>
-				<td>" . $dev['MHSav'] . "</td>
+				<td><a href='http://mineforeman.com/bitcoin-mining-calculator/?hash=" . $dev['MHSav'] . "' target='_blank'>" . $dev['MHSav'] . "</a></td>
 				<td>" . $dev['Accepted'] . "</td>
 				<td>" . $dev['Rejected'] . "</td>
 				<td>" . $dev['HardwareErrors'] . "</td>
@@ -169,7 +169,7 @@ function statsTable($devs) {
 				<th>Totals</th>
 				<th>" . $devices . "</th>
 				<th></td>
-				<th>" . $MHSav . "</th>
+				<th><a href='http://mineforeman.com/bitcoin-mining-calculator/?hash=" . $MHSav . "' target='_blank'>" . $MHSav . "</a></th>
 				<th>" . $Accepted . "</th>
 				<th>" . $Rejected . "</th>
 				<th>" . $HardwareErrors . "</th>
