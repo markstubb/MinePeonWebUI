@@ -85,10 +85,10 @@ include('menu.php');
 				<th>Accept</th>
 				<th>Reject</th>
 				<th>Discard</th>				
-				<th>Last <br />Share <br />Time</th>				
+				<th>Last <br />Share</th>				
 				<th>Diff1 <br />Shares</th>				
-				<th>Difficulty <br />Accepted</th>
-				<th>Difficulty <br />Rejected</th>
+				<th>Diff <br />Accept</th>
+				<th>Diff <br />Reject</th>
 				<th>Last Share <br />Difficulty</th>
 				<th>Best <br />Share</th>			
 			</tr>
