@@ -6,65 +6,53 @@ require('timezone.inc.php');
 require('miner.inc.php');
 require('settings.inc.php');
 
+// set the number of extra empty rows for adding pools
+$extraPools = 2;
+
 // read the miner config file
 $minerConf = file_get_contents("/opt/minepeon/etc/miner.conf", true);
 
 // decode the json
 $data = json_decode($minerConf, true);
 
-
-if (!empty($_POST['URL0']) and !empty($_POST['USER0']) and !empty($_POST['PASS0'])) {
+// check whether there is POST data to handle
+if (!empty($_POST)) {
 
 	// unset the pools
 	unset($data['pools']);
-	
-	// Construct pool 0
-	$pool = array(
-		"url" => $_POST['URL0'],
-		"user" => $_POST['USER0'],
-		"pass" => $_POST['PASS0'],
-	);
-	
-	// Set pool 0
-	$data['pools'][0] = $pool;
-	
-	// echo $_POST['URL0'] . $_POST['USER0'] . $_POST['PASS0'] ;
 
-	if (!empty($_POST['URL1']) and !empty($_POST['USER1']) and !empty($_POST['PASS1'])) {
+	// initialize the POST data counter
+	$j = 0;
+ 
+	//initialize a limit to the number of pools that are added to the miner config file. is there an official limit?
+	$poolLimit = 20;
 
-		// Construct pool 1
+	// as long as the POST URL, USER and PASS data are present and the count is under the poolLimit, process the POST data
+	while (!empty($_POST['URL'.$j.'']) and !empty($_POST['USER'.$j.'']) and !empty($_POST['PASS'.$j.'']) and $j<$poolLimit) {
+     	
+		// Construct pool at j
 		$pool = array(
-			"url" => $_POST['URL1'],
-			"user" => $_POST['USER1'],
-			"pass" => $_POST['PASS1'],
+			"url" => $_POST['URL'.$j.''],
+			"user" => $_POST['USER'.$j.''],
+			"pass" => $_POST['PASS'.$j.''],
 		);
 	
-		// Set pool 1
-		$data['pools'][1] = $pool;
+		// Set pool at j
+		$data['pools'][$j] = $pool;
 	
-		// echo $_POST['URL1'] . $_POST['USER1'] . $_POST['PASS1'] ;
-		
-		if (!empty($_POST['URL2']) and !empty($_POST['USER2']) and !empty($_POST['PASS2'])) {
-		
-			// Construct pool 2
-			$pool = array(
-				"url" => $_POST['URL2'],
-				"user" => $_POST['USER2'],
-				"pass" => $_POST['PASS2'],
-			);
-	
-			// Set pool 2
-			$data['pools'][2] = $pool;
-		
-			// echo $_POST['URL2'] . $_POST['USER2'] . $_POST['PASS2'] ;
-		
-		}
+		// debug output
+		// echo $_POST['URL'.$j.''] . $_POST['USER'.$j.''] . $_POST['PASS'.$j.''];
+
+		// increment count
+		$j++;
 	}
-	
+
 	// Recode into JSON and save
-	file_put_contents("/opt/minepeon/etc/miner.conf", json_encode($data));
-	cgminer("restart");
-	sleep(10);
+	if (!empty($data['pools'])) {
+		file_put_contents("/opt/minepeon/etc/miner.conf", json_encode($data));
+		cgminer("restart");
+		sleep(10);
+	}
 }
 
 include('head.php');
@@ -78,25 +66,33 @@ include('menu.php');
 
       <h1>Mining Pools</h1>
 	  <form name="input" action="/pools.php" method="post">
-	  URL: <input type="text" value="<?php echo $data['pools'][0]['url']; ?>" name="URL0">
-	  Username: <input type="text" value="<?php echo $data['pools'][0]['user']; ?>" name="USER0">
-	  Password: <input type="text" value="<?php echo $data['pools'][0]['pass']; ?>" name="PASS0"><br>
-	  URL: <input type="text" value="<?php echo $data['pools'][1]['url']; ?>" name="URL1">
-	  Username: <input type="text" value="<?php echo $data['pools'][1]['user']; ?>" name="USER1">
-	  Password: <input type="text" value="<?php echo $data['pools'][1]['pass']; ?>" name="PASS1"><br>
-	  URL: <input type="text" value="<?php echo $data['pools'][2]['url']; ?>" name="URL2">
-	  Username: <input type="text" value="<?php echo $data['pools'][2]['user']; ?>" name="USER2">
-	  Password: <input type="text" value="<?php echo $data['pools'][2]['pass']; ?>" name="PASS2"><br>
+		<?php
+ 
+		// set the number of populated pools
+		$countOfPools = count($data['pools']);
+ 
+		for ($i = 0; $i < $countOfPools; $i++) {
+			if (!empty($data['pools'][$i]['url']) and !empty($data['pools'][$i]['user']) and !empty($data['pools'][$i]['pass'])) { ?>
+			  URL: <input type="text" value="<?php echo $data['pools'][$i]['url']; ?>" name="URL<?php echo $i; ?>">
+			  Username: <input type="text" value="<?php echo $data['pools'][$i]['user']; ?>" name="USER<?php echo $i; ?>">
+			  Password: <input type="text" value="<?php echo $data['pools'][$i]['pass']; ?>" name="PASS<?php echo $i; ?>"><br>
+		  <?php }
+               }
+ 
+               //output extra empty rows to accomodate adding more pools
+               for ($k = $countOfPools; $k < $countOfPools+$extraPools; $k++) {?>
+                     URL: <input type="text" value="" name="URL<?php echo $k; ?>">
+                     Username: <input type="text" value="" name="USER<?php echo $k; ?>">
+                     Password: <input type="text" value="" name="PASS<?php echo $k; ?>"><br>
+               <?php } ?>
 	  <input type="submit" value="Submit">
 	  </form>
       <p>Use this form to change to your own mining accounts!  Pressing submit will take 10 seconds as the miner restarts with the new configuration.</p> 
 	  <p><b>WARNING:</b> There is very little validation on these settings at the moment so make sure your settings are correct!</p>
 	  <p>While I don't mind if you leave my details you will be mining 
-	  using the MinePeon test account and any bitcoins generated will be concidered
+	  using the MinePeon test account and any bitcoins generated will be considered
 	  a dontation to the MinePeon project.</p>
 
     </div><!-- /container -->
 		<?php if($donation == 0) { echo $plea; } ?>
-<?php
-
-include('foot.php');
+<?php include('foot.php'); ?>
