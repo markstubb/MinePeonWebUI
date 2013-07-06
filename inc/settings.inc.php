@@ -24,7 +24,7 @@ $plea = '
 					<li>Cloud Control</li>
 					<li>VPN Tunneling (DDOS Protection & Anonymity)</li>
 				</ul>
-				<p>Most of those new features cost money to setup and run, I would prefer not to have to make features avalible as "paied for" addons but it all depends on you.</p>
+				<p>Most of those new features cost money to setup and run, I would prefer not to have to make features available as "paid for" addons but it all depends on you.</p>
 				<p>Neil Fincham</p>
 				<p>The MineForeman</p>
 				<p>P.S. Every time you set donations to zero a kitten dies. <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>
