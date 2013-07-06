@@ -223,6 +223,7 @@ function poolsTable($pools) {
 
 // class="success" error warning info
 
+	$table = "";
 	foreach ($pools as $pool) {
 
 		if ($pool['Status'] <> "Alive") {
