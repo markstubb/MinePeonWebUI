@@ -50,7 +50,7 @@ if (!empty($_POST)) {
 	// Recode into JSON and save
 	if (!empty($data['pools'])) {
 		file_put_contents("/opt/minepeon/etc/miner.conf", json_encode($data));
-		cgminer("restart");
+		cgminer("quit");
 		sleep(10);
 	}
 }
