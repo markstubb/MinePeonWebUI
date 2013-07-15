@@ -19,11 +19,11 @@ function cgminer($command, $parameter) {
 		throw new UnexpectedValueException("Failed to connect: $errorMessage");
 	}
 	fwrite($client, $jsonCmd);
-	$responce = stream_get_contents($client);
+	$response = stream_get_contents($client);
 	fclose($client);
-	$responce = preg_replace("/[^[:alnum:][:punct:]]/","",$responce);
-	$responce = json_decode($responce, true);
-	return $responce;
+	$response = preg_replace("/[^[:alnum:][:punct:]]/","",$response);
+	$response = json_decode($response, true);
+	return $response;
 
 }
 
