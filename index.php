@@ -235,7 +235,7 @@ function poolsTable($pools) {
 			$rowclass = '';
 			
 		}
-	
+                $poolTotalShares = $pool['Accepted'] + $pool['Rejected'] + $pool['Discarded'];
 		$table = $table . "
 			<tr  class='" . $rowclass . "'>
 				<td>" . $pool['URL'] . "</td>
@@ -244,8 +244,8 @@ function poolsTable($pools) {
 				<td>" . $pool['Priority'] . "</td>
 				<td>" . $pool['Getworks'] . "</td>
 				<td>" . $pool['Accepted'] . "</td>
-				<td>" . $pool['Rejected'] . " ["  . round($pool['Accepted'] / $pool['Rejected'] / 100, 2) .  "%]</td>
-				<td>" . $pool['Discarded'] . " ["  . round($pool['Accepted'] / $pool['Discarded'] / 100, 2) .  "%]</td>				
+				<td>" . $pool['Rejected'] . " ["  . round(($pool['Rejected'] / $poolTotalShares) * 100, 2) .  "%]</td>
+				<td>" . $pool['Discarded'] . " ["  . round(($pool['Discarded'] / $poolTotalShares) * 100, 2) .  "%]</td>
 				<td>" . date('H:i:s', $pool['LastShareTime']) . "</td>				
 				<td>" . $pool['Diff1Shares'] . "</td>				
 				<td>" . $pool['DifficultyAccepted'] . "</td>
