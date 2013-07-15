@@ -248,7 +248,7 @@ function poolsTable($pools) {
 				<td>" . $pool['Discarded'] . "</td>
 				<td>" . date('H:i:s', $pool['LastShareTime']) . "</td>				
 				<td>" . $pool['Diff1Shares'] . "</td>				
-				<td>" . $pool['DifficultyAccepted'] . " ["  . round(($pool['DifficultyAccepted'] / $pool['Diff1Shares']) * 100, 2) .  "%]</td></td>
+				<td>" . $pool['DifficultyAccepted'] . " ["  . round(($pool['DifficultyAccepted'] / $pool['Diff1Shares']) * 100, 2) .  "%]</td>
 				<td>" . $pool['DifficultyRejected'] . " ["  . round(($pool['DifficultyRejected'] / $pool['Diff1Shares']) * 100, 2) .  "%]</td>
 				<td>" . $pool['LastShareDifficulty'] . "</td>
 				<td>" . $pool['BestShare'] . "</td>			
