@@ -89,6 +89,7 @@ include('menu.php');
 				<th>Diff1 <br />Shares</th>				
 				<th>Diff <br />Accept</th>
 				<th>Diff <br />Reject</th>
+				<th>Diff <br />Stale</th>
 				<th>Last Share <br />Difficulty</th>
 				<th>Best <br />Share</th>			
 			</tr>
@@ -235,7 +236,7 @@ function poolsTable($pools) {
 			$rowclass = 'success';
 			
 		}
-	
+
 		$table = $table . "
 			<tr  class='" . $rowclass . "'>
 				<td>" . $pool['URL'] . "</td>
@@ -244,12 +245,13 @@ function poolsTable($pools) {
 				<td>" . $pool['Priority'] . "</td>
 				<td>" . $pool['Getworks'] . "</td>
 				<td>" . $pool['Accepted'] . "</td>
-				<td>" . $pool['Rejected'] . " ["  . round($pool['Accepted'] / $pool['Rejected'] / 100, 2) .  "%]</td>
-				<td>" . $pool['Discarded'] . " ["  . round($pool['Accepted'] / $pool['Discarded'] / 100, 2) .  "%]</td>				
+				<td>" . $pool['Rejected'] . "</td>
+				<td>" . $pool['Discarded'] . "</td>
 				<td>" . date('H:i:s', $pool['LastShareTime']) . "</td>				
 				<td>" . $pool['Diff1Shares'] . "</td>				
-				<td>" . $pool['DifficultyAccepted'] . "</td>
-				<td>" . $pool['DifficultyRejected'] . "</td>
+				<td>" . $pool['DifficultyAccepted'] . " ["  . round(($pool['DifficultyAccepted'] / $pool['Diff1Shares']) * 100, 2) .  "%]</td>
+				<td>" . $pool['DifficultyRejected'] . " ["  . round(($pool['DifficultyRejected'] / $pool['Diff1Shares']) * 100, 2) .  "%]</td>
+				<td>" . $pool['DifficultyStale'] . " ["  . round(($pool['DifficultyStale'] / $pool['Diff1Shares']) * 100, 2) .  "%]</td>
 				<td>" . $pool['LastShareDifficulty'] . "</td>
 				<td>" . $pool['BestShare'] . "</td>			
 			</tr>";
