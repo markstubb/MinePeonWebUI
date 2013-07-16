@@ -232,7 +232,7 @@ function poolsTable($pools) {
 			
 		} else {
 		
-			$rowclass = '';
+			$rowclass = 'success';
 			
 		}
 	
