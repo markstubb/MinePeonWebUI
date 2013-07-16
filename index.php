@@ -137,7 +137,7 @@ function statsTable($devs) {
 	$tableRow = "";
 	
 	foreach ($devs as $dev) {
-		
+		$devShareTotal = $dev['Accepted'] + $dev['Rejected'] + $dev['HardwareErrors'];
 		if ($dev['MHS5s'] > 0) {
 		$tableRow = $tableRow . "
 
@@ -147,8 +147,8 @@ function statsTable($devs) {
 				<td>" . $dev['Temperature'] . "</td>
 				<td><a href='http://mineforeman.com/bitcoin-mining-calculator/?hash=" . $dev['MHSav'] . "' target='_blank'>" . $dev['MHSav'] . "</a></td>
 				<td>" . $dev['Accepted'] . "</td>
-				<td>" . $dev['Rejected'] . " ["  . round($dev['Accepted'] / $dev['Rejected'] / 100, 2) .  "%]</td>
-				<td>" . $dev['HardwareErrors'] . " ["  . round($dev['Accepted'] / $dev['HardwareErrors'] / 100, 2) .  "%]</td>
+				<td>" . $dev['Rejected'] . " [" . round(($dev['Rejected'] / $devShareTotal) * 100, 2) . "%]</td>
+				<td>" . $dev['HardwareErrors'] . " [" . round(($dev['HardwareErrors'] / $devShareTotal) * 100, 2) . "%]</td>
 				<td>" . $dev['Utility'] . "</td>
 				<td>" . date('H:i:s', $dev['LastShareTime']) . "</td>
 			</tr>";
@@ -163,6 +163,7 @@ function statsTable($devs) {
 		}
 	}
 	
+	$totalShares = $Accepted + $Rejected + $HardwareErrors;
 	$tableRow = $tableRow . "
 		</tbody>
 		<tfoot>
@@ -172,8 +173,8 @@ function statsTable($devs) {
 				<th></td>
 				<th><a href='http://mineforeman.com/bitcoin-mining-calculator/?hash=" . $MHSav . "' target='_blank'>" . $MHSav . "</a></th>
 				<th>" . $Accepted . "</th>
-				<th>" . $Rejected . " ["  . round($Accepted / $Rejected / 100, 2) .  "%]</th>
-				<th>" . $HardwareErrors . " ["  . round($Accepted / $HardwareErrors / 100, 2) .  "%]</th>
+				<th>" . $Rejected . " [" . round(($Rejected / $totalShares) * 100, 2) . "%]</th>
+				<th>" . $HardwareErrors . " [" . round(($HardwareErrors / $totalShares) * 100, 2) . "%]</th>
 				<th>" . $Utility . "</th>
 				<th></th>
 			</tr>
