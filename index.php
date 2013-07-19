@@ -71,7 +71,7 @@ include('menu.php');
 				<td><?php echo $summary['STATUS'][0]['Description']; ?></td>
 				<td><?php echo secondsToWords(round($uptime[0])); ?></td>	
 				<td><?php echo secondsToWords($summary['SUMMARY'][0]['Elapsed']); ?></td>
-				<td><?php echo $mpTemp; ?> &deg;C</td>
+				<td><?php echo $mpTemp; ?> &deg;C | <?php echo $mpTemp*9/5+32; ?> &deg;F</td>
 				<td><?php echo $summary['SUMMARY'][0]['BestShare']; ?></td>
 				<td><?php echo $donation; if ($donation == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></td>
 			</tr>
