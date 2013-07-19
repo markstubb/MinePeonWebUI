@@ -31,6 +31,11 @@ function create_graph($output, $start, $title) {
   }
 }
 
+//MinePeon temperature
+$mpTemp = substr(substr(exec('/opt/vc/bin/vcgencmd measure_temp'), 5),
+0, -2);
+
+
 $stats = cgminer("devs", "");
 $status = $stats['STATUS'];
 $devs = $stats['DEVS'];
@@ -50,13 +55,14 @@ include('menu.php');
 		<br />
 		<table id="status" class="table table-striped table-bordered table-hover table-condensed stats">
 			<tr>
-				<th colspan="6">MinePeon Status</th>
+				<th colspan="7">MinePeon Status</th>
 			</tr>
 			<tr>
 				<th>MinePeon Version</th>
 				<th>Miner Version</th>
 				<th>MinePeon Uptime</th>	
 				<th>Miner Uptime</th>
+				<th>MinePeon Temp</th>
 				<th>Best Share</th>
 				<th>Donation Minutes</th>
 			</tr>
@@ -65,6 +71,7 @@ include('menu.php');
 				<td><?php echo $summary['STATUS'][0]['Description']; ?></td>
 				<td><?php echo secondsToWords(round($uptime[0])); ?></td>	
 				<td><?php echo secondsToWords($summary['SUMMARY'][0]['Elapsed']); ?></td>
+				<td><?php echo $mpTemp; ?> &deg;C | <?php echo $mpTemp*9/5+32; ?> &deg;F</td>
 				<td><?php echo $summary['SUMMARY'][0]['BestShare']; ?></td>
 				<td><?php echo $donation; if ($donation == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></td>
 			</tr>
