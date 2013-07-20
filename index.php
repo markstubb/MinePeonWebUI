@@ -149,17 +149,18 @@ function statsTable($devs) {
 	
 	foreach ($devs as $dev) {
 		$devShareTotal = $dev['Accepted'] + $dev['Rejected'] + $dev['HardwareErrors'];
+		$rejectedErrorPercent = round(($dev['Rejected'] / $devShareTotal) * 100, 2);
+		$hwErrorPercent = round(($dev['HardwareErrors'] / $devShareTotal) * 100, 2);
 		if ($dev['MHS5s'] > 0) {
-		$tableRow = $tableRow . "
-
-			<tr>
-				<td>" . $dev['Name'] . "</td>
+		$tableRow = $tableRow .
+			($hwErrorPercent >= 10 || $rejectedErrorPercent > 5 ? "<tr class=\"error\">" : "<tr>")
+				."<td>" . $dev['Name'] . "</td>
 				<td>" . $dev['ID'] . "</td>
 				<td>" . $dev['Temperature'] . "</td>
 				<td><a href='http://mineforeman.com/bitcoin-mining-calculator/?hash=" . $dev['MHSav'] . "' target='_blank'>" . $dev['MHSav'] . "</a></td>
 				<td>" . $dev['Accepted'] . "</td>
-				<td>" . $dev['Rejected'] . " [" . round(($dev['Rejected'] / $devShareTotal) * 100, 2) . "%]</td>
-				<td>" . $dev['HardwareErrors'] . " [" . round(($dev['HardwareErrors'] / $devShareTotal) * 100, 2) . "%]</td>
+				<td>" . $dev['Rejected'] . " [" . $rejectedErrorPercent . "%]</td>
+				<td>" . $dev['HardwareErrors'] . " [" . $hwErrorPercent . "%]</td>
 				<td>" . $dev['Utility'] . "</td>
 				<td>" . date('H:i:s', $dev['LastShareTime']) . "</td>
 			</tr>";
