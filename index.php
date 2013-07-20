@@ -32,8 +32,10 @@ function create_graph($output, $start, $title) {
 }
 
 //MinePeon temperature
-$mpTemp = substr(substr(exec('/opt/vc/bin/vcgencmd measure_temp'), 5),
-0, -2);
+$mpTemp = substr(substr(exec('/opt/vc/bin/vcgencmd measure_temp'), 5), 0, -2);
+
+//MinePeon CPU load
+$mpCPULoad = sys_getloadavg();
 
 
 $stats = cgminer("devs", "");
@@ -55,7 +57,7 @@ include('menu.php');
 		<br />
 		<table id="status" class="table table-striped table-bordered table-hover table-condensed stats">
 			<tr>
-				<th colspan="7">MinePeon Status</th>
+				<th colspan="8">MinePeon Status</th>
 			</tr>
 			<tr>
 				<th>MinePeon Version</th>
@@ -63,6 +65,7 @@ include('menu.php');
 				<th>MinePeon Uptime</th>	
 				<th>Miner Uptime</th>
 				<th>MinePeon Temp</th>
+				<th>MinePeon CPU Load</th>
 				<th>Best Share</th>
 				<th>Donation Minutes</th>
 			</tr>
@@ -72,6 +75,7 @@ include('menu.php');
 				<td><?php echo secondsToWords(round($uptime[0])); ?></td>	
 				<td><?php echo secondsToWords($summary['SUMMARY'][0]['Elapsed']); ?></td>
 				<td><?php echo $mpTemp; ?> &deg;C | <?php echo $mpTemp*9/5+32; ?> &deg;F</td>
+				<td><?php echo $mpCPULoad[0] . ' [1 min] ' . $mpCPULoad[1] . ' [5 mins] ' . $mpCPULoad[2] , ' [15 mins]'; ?></td>
 				<td><?php echo $summary['SUMMARY'][0]['BestShare']; ?></td>
 				<td><?php echo $donation; if ($donation == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></td>
 			</tr>
@@ -209,20 +213,20 @@ function secondsToWords($seconds)
     $hours = (intval($seconds) / 3600) % 24;
     if($hours > 0)
     {
-        $ret .= "$hours hours ";
+        $ret .= "$hours hrs ";
     }
 
     /*** get the minutes ***/
     $minutes = (intval($seconds) / 60) % 60;
     if($minutes > 0)
     {
-        $ret .= "$minutes minutes ";
+        $ret .= "$minutes mins ";
     }
 
     /*** get the seconds ***/
     $seconds = intval($seconds) % 60;
     if ($seconds > 0) {
-        $ret .= "$seconds seconds";
+        $ret .= "$seconds secs";
     }
 
     return $ret;
