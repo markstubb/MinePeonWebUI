@@ -82,3 +82,10 @@ font-size: 12px;
 { 
 text-align: center; 
 }
+
+.small {
+	font-size: small;
+}
+.larger {
+	font-size: large;
+}
