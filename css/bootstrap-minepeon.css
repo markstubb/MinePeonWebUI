@@ -31,6 +31,22 @@ blockquote cite:before {
 content: "\2014 \2009";
 }
 
+table.status 
+{
+}
+table.status tr 
+{
+}
+table.status th
+{
+text-align: center;
+}
+table.status td 
+{
+text-align: center;
+font-size: 12px;
+}
+
 table.stats 
 {
 }
