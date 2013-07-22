@@ -100,7 +100,6 @@ include('menu.php');
 				<th>Diff1 <br />Shares</th>				
 				<th>Diff <br />Accept</th>
 				<th>Diff <br />Reject</th>
-				<th>Diff <br />Stale</th>
 				<th>Last Share <br />Difficulty</th>
 				<th>Best <br />Share</th>			
 			</tr>
@@ -264,7 +263,6 @@ function poolsTable($pools) {
 				<td>" . $pool['Diff1Shares'] . "</td>				
 				<td>" . $pool['DifficultyAccepted'] . " ["  . (!$pool['Diff1Shares'] == 0 ? round(($pool['DifficultyAccepted'] / $pool['Diff1Shares']) * 100, 2) : 0) .  "%]</td>
 				<td>" . $pool['DifficultyRejected'] . " ["  . (!$pool['Diff1Shares'] == 0 ? round(($pool['DifficultyRejected'] / $pool['Diff1Shares']) * 100, 2) : 0) .  "%]</td>
-				<td>" . $pool['DifficultyStale'] . " ["  . (!$pool['Diff1Shares'] == 0 ? round(($pool['DifficultyStale'] / $pool['Diff1Shares']) * 100, 2) : 0) .  "%]</td>
 				<td>" . $pool['LastShareDifficulty'] . "</td>
 				<td>" . $pool['BestShare'] . "</td>			
 			</tr>";
