@@ -74,8 +74,8 @@ include('menu.php');
 				<td><?php echo $summary['STATUS'][0]['Description']; ?></td>
 				<td><?php echo secondsToWords(round($uptime[0])); ?></td>	
 				<td><?php echo secondsToWords($summary['SUMMARY'][0]['Elapsed']); ?></td>
-				<td><?php echo $mpTemp; ?> &deg;C | <?php echo $mpTemp*9/5+32; ?> &deg;F</td>
-				<td><?php echo $mpCPULoad[0] . ' [1 min] ' . $mpCPULoad[1] . ' [5 mins] ' . $mpCPULoad[2] , ' [15 mins]'; ?></td>
+				<td><?php echo $mpTemp; ?> <small>&deg;C</small> | <?php echo $mpTemp*9/5+32; ?> <small>&deg;F</small></td>
+				<td><?php echo $mpCPULoad[0] . ' <small>[1 min]</small> ' . $mpCPULoad[1] . ' <small>[5 mins]</small> ' . $mpCPULoad[2] , ' <small>[15 mins]</small>'; ?></td>
 				<td><?php echo $summary['SUMMARY'][0]['BestShare']; ?></td>
 				<td><?php echo $donation; if ($donation == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></td>
 			</tr>
@@ -206,27 +206,27 @@ function secondsToWords($seconds)
     $days = intval(intval($seconds) / (3600*24));
     if($days> 0)
     {
-        $ret .= "$days days ";
+        $ret .= "$days <small>days </small>";
     }
 
     /*** get the hours ***/
     $hours = (intval($seconds) / 3600) % 24;
     if($hours > 0)
     {
-        $ret .= "$hours hrs ";
+        $ret .= "$hours <small>hrs </small>";
     }
 
     /*** get the minutes ***/
     $minutes = (intval($seconds) / 60) % 60;
     if($minutes > 0)
     {
-        $ret .= "$minutes mins ";
+        $ret .= "$minutes <small>mins </small>";
     }
 
     /*** get the seconds ***/
     $seconds = intval($seconds) % 60;
     if ($seconds > 0) {
-        $ret .= "$seconds secs";
+        $ret .= "$seconds <small>secs</small>";
     }
 
     return $ret;
