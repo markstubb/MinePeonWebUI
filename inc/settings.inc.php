@@ -1,10 +1,25 @@
 <?php
 
+$settings = json_decode(file_get_contents("/opt/minepeon/etc/minepeon.conf", true), true);
+
 if ( ! isset($_SERVER['HTTPS'])) {
    header('Location: https://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI']);
 }
 
-$timezone = file_get_contents("/opt/minepeon/etc/timezone");
+if (file_exists("/opt/minepeon/etc/timezone")) {
+
+	// Pul the timesone out of the file and put it into settings.
+	// remove the file afterwards and save
+	
+	$settings['timezone'] = file_get_contents("/opt/minepeon/etc/timezone");
+	unlink("/opt/minepeon/etc/timezone");
+	
+	writeSettings($settings);
+
+}
+// $timezone = file_get_contents("/opt/minepeon/etc/timezone");
+
+$timezone = $settings['timezone'];
 
 ini_set( 'date.timezone', $timezone );
 
@@ -12,7 +27,7 @@ putenv("TZ=" . $timezone);
 
 date_default_timezone_set($timezone);
 
-$settings = json_decode(file_get_contents("/opt/minepeon/etc/minepeon.conf", true), true);
+
 
 $uptime = explode(' ', exec("cat /proc/uptime"));
 
@@ -20,6 +35,8 @@ $version = file_get_contents("/opt/minepeon/etc/version");
 
 $donation = file_get_contents("/opt/minepeon/etc/donation");
 
+
+/*
 $settings = array(
 	"timezone" => 1,
 	"version" => 1,
@@ -27,13 +44,17 @@ $settings = array(
 
 );
 
+*/
+
 //$settings['timezone'] = $timezone;
 
 writeSettings($settings);
 
-function writeSettings() {
+function writeSettings($settings, $file = 'minepeon.conf') {
+	// Call this when you want settings to be saved with writeSettings($settings);
+	// can be used to save to an alternat file name with writeSettings($settings, 'OtherFileName.conf);
 
-	file_put_contents("/opt/minepeon/etc/minepeon.conf", json_encode($settings, JSON_PRETTY_PRINT));
+	file_put_contents("/opt/minepeon/etc/" . $file, json_encode($settings, JSON_PRETTY_PRINT));
 
 }
 $plea = '

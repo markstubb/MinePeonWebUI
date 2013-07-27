@@ -1,7 +1,7 @@
 <?php
 
-require('settings.inc.php');
-require('miner.inc.php');
+require_once('settings.inc.php');
+require_once('miner.inc.php');
 
 
 if (isset($_POST['newpassword'])) {
@@ -16,12 +16,9 @@ if (isset($_POST['newpassword'])) {
 
 if (isset($_POST['userTimeZone'])) {
 
- 
-	$file = '/opt/minepeon/etc/timezone';
-	$content = $_POST['userTimeZone'];
-
-	file_put_contents($file, $content);
-
+	$settings['timezone'] = $_POST['userTimeZone'];
+	writeSettings($settings);
+	
 }
 
 if (isset($_POST['userDonation'])) {
@@ -36,7 +33,6 @@ if (isset($_POST['userDonation'])) {
 
 }
 
-require('settings.inc.php');
 
 function formatOffset($offset) {
         $hours = $offset / 3600;
@@ -65,7 +61,7 @@ foreach(DateTimeZone::listIdentifiers() as $tz) {
 
 	$selected = "";
 	
-	if ($timezone == $tz) {
+	if ($settings['timezone'] == $tz) {
 		$selected = "selected";
 	}
 	
