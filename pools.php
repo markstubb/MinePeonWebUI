@@ -2,7 +2,6 @@
 
 
 require('ssl.inc.php');
-require('timezone.inc.php');
 require('miner.inc.php');
 require('settings.inc.php');
 

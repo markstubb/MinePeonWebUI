@@ -1,7 +1,6 @@
 <?php
 
 require('ssl.inc.php');
-require('timezone.inc.php');
 require('miner.inc.php');
 
 
