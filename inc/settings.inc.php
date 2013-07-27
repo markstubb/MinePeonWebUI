@@ -1,11 +1,27 @@
 <?php
 
+$settings = json_decode(file_get_contents("/opt/minepeon/etc/minepeon.conf", true), true);
+
 $uptime = explode(' ', exec("cat /proc/uptime"));
 
 $version = file_get_contents("/opt/minepeon/etc/version");
 
 $donation = file_get_contents("/opt/minepeon/etc/donation");
 
+$settings = array(
+	"timezone" => 1,
+	"version" => 1,
+	"donation" => 1,
+
+);
+
+writeSettings();
+
+function writeSettings() {
+
+	file_put_contents("/opt/minepeon/etc/minepeon.conf", json_encode($settings, JSON_PRETTY_PRINT));
+
+}
 $plea = '
 		<div class="container">
 			<fieldset>
