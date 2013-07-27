@@ -1,5 +1,17 @@
 <?php
 
+if ( ! isset($_SERVER['HTTPS'])) {
+   header('Location: https://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI']);
+}
+
+$timezone = file_get_contents("/opt/minepeon/etc/timezone");
+
+ini_set( 'date.timezone', $timezone );
+
+putenv("TZ=" . $timezone);
+
+date_default_timezone_set($timezone);
+
 $settings = json_decode(file_get_contents("/opt/minepeon/etc/minepeon.conf", true), true);
 
 $uptime = explode(' ', exec("cat /proc/uptime"));
@@ -15,7 +27,9 @@ $settings = array(
 
 );
 
-writeSettings();
+//$settings['timezone'] = $timezone;
+
+writeSettings($settings);
 
 function writeSettings() {
 

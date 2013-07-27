@@ -1,8 +1,5 @@
 <?php
 
-
-require('ssl.inc.php');
-require('miner.inc.php');
 require('settings.inc.php');
 
 // set the number of extra empty rows for adding pools

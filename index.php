@@ -1,6 +1,5 @@
 <?php
 
-include('ssl.inc.php');
 require('miner.inc.php');
 include('settings.inc.php');
 
