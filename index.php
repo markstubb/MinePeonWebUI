@@ -75,7 +75,7 @@ include('menu.php');
 				<td><?php echo $mpTemp; ?> <small>&deg;C</small> | <?php echo $mpTemp*9/5+32; ?> <small>&deg;F</small></td>
 				<td><?php echo $mpCPULoad[0] . ' <small>[1 min]</small> ' . $mpCPULoad[1] . ' <small>[5 min]</small> ' . $mpCPULoad[2] , ' <small>[15 min]</small>'; ?></td>
 				<td><?php echo $summary['SUMMARY'][0]['BestShare']; ?></td>
-				<td><?php echo $donation; if ($donation == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></td>
+				<td><?php echo $settings['donation']; if ($settings['donation'] == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></td>
 			</tr>
 		</table>
 	</div>
@@ -128,7 +128,7 @@ include('menu.php');
 			<?php echo statsTable($devs);  ?>
 		</table>
 	</div>
-	<?php if($donation == 0) { echo $plea; } ?>
+	<?php if($settings['donation'] == 0) { echo $plea; } ?>
 <?php
 
 include('foot.php');

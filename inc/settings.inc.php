@@ -17,7 +17,18 @@ if (file_exists("/opt/minepeon/etc/timezone")) {
 	writeSettings($settings);
 
 }
-// $timezone = file_get_contents("/opt/minepeon/etc/timezone");
+
+if (file_exists("/opt/minepeon/etc/donation")) {
+
+	// Pul the donation out of the file and put it into settings.
+	// remove the file afterwards and save
+	
+	$settings['donation'] = file_get_contents("/opt/minepeon/etc/donation");
+	unlink("/opt/minepeon/etc/donation");
+	
+	writeSettings($settings);
+
+};
 
 $timezone = $settings['timezone'];
 
@@ -27,26 +38,15 @@ putenv("TZ=" . $timezone);
 
 date_default_timezone_set($timezone);
 
-
-
 $uptime = explode(' ', exec("cat /proc/uptime"));
 
 $version = file_get_contents("/opt/minepeon/etc/version");
 
-$donation = file_get_contents("/opt/minepeon/etc/donation");
+// Tempory re asignments till the code is updated
 
+$donation = $settings['donation'];
 
-/*
-$settings = array(
-	"timezone" => 1,
-	"version" => 1,
-	"donation" => 1,
-
-);
-
-*/
-
-//$settings['timezone'] = $timezone;
+$timezone = $settings['timezone'];
 
 writeSettings($settings);
 

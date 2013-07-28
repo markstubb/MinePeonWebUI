@@ -23,14 +23,9 @@ if (isset($_POST['userTimeZone'])) {
 
 if (isset($_POST['userDonation'])) {
 
- 
-	$file = '/opt/minepeon/etc/donation';
-	$content = $_POST['userDonation'];
-
-	file_put_contents($file, $content);
+	$settings['donation'] = $_POST['userDonation'];
+	writeSettings($settings);
 	
-	$userDonation = $_POST['userDonation']; 
-
 }
 
 
