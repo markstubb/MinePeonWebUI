@@ -28,9 +28,23 @@ if (isset($_POST['userDonation'])) {
 	
 }
 
+if (isset($_POST['userSMTP'])) {
+
+	$settings['smtp'] = $_POST['userSMTP'];
+	writeSettings($settings);
+	
+}
+
 if (isset($_POST['userEmail'])) {
 
 	$settings['email'] = $_POST['userEmail'];
+	writeSettings($settings);
+	
+}
+
+if (isset($_POST['userDevices'])) {
+
+	$settings['devices'] = $_POST['userDevices'];
 	writeSettings($settings);
 	
 }
@@ -95,14 +109,22 @@ include('menu.php');
 					<td>Donation (Minutes per 24 hours): </td>
 					<td><input type="text" value="<?php echo $settings['donation'] ?>" name="userDonation">
 					<input type="submit" value="Set"></td>
+					</tr>
 					<tr>
 					<td>Email for Alerts: </td>
 					<td><input type="text" value="<?php echo $settings['email'] ?>" name="userEmail">
 					<input type="submit" value="Set"></td>
-
-
-
 					</tr>
+					<tr>
+					<td>Your SMTP Server: </td>
+					<td><input type="text" value="<?php echo $settings['smtp'] ?>" name="userSMTP">
+					<input type="submit" value="Set"></td>
+					</tr>
+					<tr>
+					<td>Expected Devices: </td>
+					<td><input type="text" value="<?php echo $settings['devices'] ?>" name="userDevices">
+					<input type="submit" value="Set"></td>
+					</tr>					
 					<table>
 					</form>
 					
