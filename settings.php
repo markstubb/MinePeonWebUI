@@ -28,6 +28,12 @@ if (isset($_POST['userDonation'])) {
 	
 }
 
+if (isset($_POST['userEmail'])) {
+
+	$settings['email'] = $_POST['userEmail'];
+	writeSettings($settings);
+	
+}
 
 function formatOffset($offset) {
         $hours = $offset / 3600;
@@ -87,7 +93,11 @@ include('menu.php');
 					</tr>
 					<tr>
 					<td>Donation (Minutes per 24 hours): </td>
-					<td><input type="text" value="<?php echo $donation ?>" name="userDonation">
+					<td><input type="text" value="<?php echo $settings['donation'] ?>" name="userDonation">
+					<input type="submit" value="Set"></td>
+					<tr>
+					<td>Email for Alerts: </td>
+					<td><input type="text" value="<?php echo $settings['email'] ?>" name="userEmail">
 					<input type="submit" value="Set"></td>
 
 
