@@ -105,39 +105,34 @@ include('menu.php');
 					<tr>
 					<td>New Password: </td>
 					<td><input type="text" value="" name="newpassword">
-					<input type="submit" value="Set"></td>
 					</tr>
 					<tr>
 					<td>TimeZone: </td>
 					<td><?php echo $tzselect ?>
-					<input type="submit" value="Set"></td>
 					</tr>
 					<tr>
 					<td>Donation (Minutes per 24 hours): </td>
 					<td><input type="text" value="<?php echo $settings['donation'] ?>" name="userDonation">
-					<input type="submit" value="Set"></td>
 					</tr>
 					<tr>
 					<td>Device Name for Alerts: </td>
 					<td><input type="text" value="<?php echo $settings['deviceName'] ?>" name="deviceName">
-					<input type="submit" value="Set"></td>
 					</tr>
 					<tr>
 					<td>Email for Alerts: </td>
 					<td><input type="text" value="<?php echo $settings['email'] ?>" name="userEmail">
-					<input type="submit" value="Set"></td>
 					</tr>
 					<tr>
 					<td>Your SMTP Server: </td>
 					<td><input type="text" value="<?php echo $settings['smtp'] ?>" name="userSMTP">
-					<input type="submit" value="Set"></td>
 					</tr>
 					<tr>
 					<td>Expected Devices: </td>
 					<td><input type="text" value="<?php echo $settings['devices'] ?>" name="userDevices">
-					<input type="submit" value="Set"></td>
+					</td>
 					</tr>					
 					<table>
+					<input type="submit" value="Save Settings">
 					</form>
 					
         </div>
