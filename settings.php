@@ -28,9 +28,9 @@ if (isset($_POST['userDonation'])) {
 	
 }
 
-if (isset($_POST['userSMTP'])) {
+if (isset($_POST['deviceName'])) {
 
-	$settings['smtp'] = $_POST['userSMTP'];
+	$settings['deviceName'] = $_POST['deviceName'];
 	writeSettings($settings);
 	
 }
@@ -38,6 +38,13 @@ if (isset($_POST['userSMTP'])) {
 if (isset($_POST['userEmail'])) {
 
 	$settings['email'] = $_POST['userEmail'];
+	writeSettings($settings);
+	
+}
+
+if (isset($_POST['userSMTP'])) {
+
+	$settings['smtp'] = $_POST['userSMTP'];
 	writeSettings($settings);
 	
 }
@@ -108,6 +115,11 @@ include('menu.php');
 					<tr>
 					<td>Donation (Minutes per 24 hours): </td>
 					<td><input type="text" value="<?php echo $settings['donation'] ?>" name="userDonation">
+					<input type="submit" value="Set"></td>
+					</tr>
+					<tr>
+					<td>Device Name for Alerts: </td>
+					<td><input type="text" value="<?php echo $settings['deviceName'] ?>" name="deviceName">
 					<input type="submit" value="Set"></td>
 					</tr>
 					<tr>
