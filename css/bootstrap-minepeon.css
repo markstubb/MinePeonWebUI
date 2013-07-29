@@ -1,3 +1,9 @@
+
+
+body{padding-top: 70px;}
+
+
+
 blockquote {
   font-family: Georgia, serif;
   font-size: 14px;
@@ -39,12 +45,9 @@ table.status tr
 }
 table.status th
 {
-text-align: center;
 }
 table.status td 
 {
-text-align: center;
-font-size: 12px;
 }
 
 table.stats 
@@ -55,11 +58,9 @@ table.stats tr
 }
 table.stats th
 {
-text-align: center;
 }
 table.stats td 
 {
-text-align: center;
 }
 
 table.pools 
@@ -70,12 +71,9 @@ table.pools tr
 }
 table.pools th
 {
-text-align: center;
 }
 table.pools td 
 {
-text-align: center;
-font-size: 12px;
 }
 
 .graph 
@@ -83,9 +81,37 @@ font-size: 12px;
 text-align: center; 
 }
 
+.ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
+}
 .small {
 	font-size: xx-small;
 }
 .larger {
 	font-size: large;
+}
+
+
+
+
+
+/* Tablesorter */
+table.tablesorter thead th{
+  padding-right: 16px
+}
+table.tablesorter thead tr .header {
+  background-image: url(bg.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+  cursor: pointer;
+}
+table.tablesorter thead tr .headerSortUp {
+  background-image: url(asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+  background-image: url(desc.gif);
 }
