@@ -27,13 +27,13 @@ include('menu.php');
 			<div class="row">
 				<div class="col-lg-2">
 					<p>
-					<label for="LABEL<?php echo $i; ?>">Label</label>
-					<input type="text" class="form-control" value="<?php echo $data['pools'][$i]['label']; ?>" name="LABEL<?php echo $i; ?>" id="LABEL<?php echo $i; ?>">
+						<label for="LABEL<?php echo $i; ?>">Label</label>
+						<input type="text" class="form-control" value="<?php echo $data['pools'][$i]['label']; ?>" name="LABEL<?php echo $i; ?>" id="LABEL<?php echo $i; ?>">
 					</p>
 				</div>
 				<div class="col-lg-4">
 					<label for="URL<?php echo $i; ?>">URL</label>
-					<input type="text" class="form-control" value="<?php echo $data['pools'][$i]['url']; ?>" name="URL<?php echo $i; ?>" id="URL<?php echo $i; ?>">
+					<input type="url" class="form-control" value="<?php echo $data['pools'][$i]['url']; ?>" name="URL<?php echo $i; ?>" id="URL<?php echo $i; ?>">
 				</div>
 				<div class="col-lg-4">
 					<label for="USER<?php echo $i; ?>">Username</label>
@@ -54,13 +54,13 @@ include('menu.php');
 			<div class="row">
 				<div class="col-lg-2">
 					<p>
-					<label for="LABEL<?php echo $i; ?>">Label</label>
-					<input type="text" class="form-control" name="LABEL<?php echo $i; ?>" id="LABEL<?php echo $i; ?>">
+						<label for="LABEL<?php echo $i; ?>">Label</label>
+						<input type="text" class="form-control" name="LABEL<?php echo $i; ?>" id="LABEL<?php echo $i; ?>">
 					</p>
 				</div>
 				<div class="col-lg-4">
 					<label for="URL<?php echo $i; ?>">URL</label>
-					<input type="text" class="form-control" name="URL<?php echo $i; ?>" id="URL<?php echo $i; ?>">
+					<input type="url" class="form-control" name="URL<?php echo $i; ?>" id="URL<?php echo $i; ?>">
 				</div>
 				<div class="col-lg-4">
 					<label for="USER<?php echo $i; ?>">Username</label>
@@ -75,12 +75,10 @@ include('menu.php');
 		}
 		?>
 		<p>After saving, the miner will restart with the new configuration. This takes about 10 seconds.</p>
-		<p><button type="button" class="btn btn-success" value="" id="save">Save pools</button></p>
+		<p><button type="button" class="btn btn-success" value="" id="save">Save pools</button> <span class="save-msg"></span></p>
 	</form>
 </div>
 <?php
-if($donation == 0) { echo $plea; }
-
 include('foot.php');
 ?>
 
@@ -88,25 +86,28 @@ include('foot.php');
 $(document).ready(function() {
 	$('#save').click( function() {
 
-		console.log("Saving pools");
-    $.ajax({
-        url: 'f_pools_save.php',
-        type: 'post',
-        dataType: 'json',
-        data: $('#formpools').serialize(),
-        success: function(data) {
-					console.log("Debug: "+JSON.stringify(data.debug));
+		console.log("Saving pool data");
+		$('.save-msg').text('Saving pool data');
 
-					if(data.success){
-						console.log("Pool data saved");
-						console.log("Settings: "+data.written+" bytes");
-						console.log("Restarting miner");
-				    $.get('f_miner.php?command=restart', function(data) {
-							console.log("Debug: "+JSON.stringify(data));
-						});
-					}
-        }
-    });
+		$.ajax({
+			url: 'f_pools_save.php',
+			type: 'post',
+			dataType: 'json',
+			data: $('#formpools').serialize(),
+			success: function(data) {
+				console.log("Debug: "+JSON.stringify(data.debug));
+
+				if(data.success){
+					$('.save-msg').text('Pool data succesfully saved');
+					console.log("Pool data saved");
+					console.log("Settings: "+data.written+" bytes");
+					console.log("Restarting miner");
+					$.get('f_miner.php?command=restart', function(data) {
+						console.log("Debug: "+JSON.stringify(data));
+					});
+				}
+			}
+		});
 	});
 });
 </script>

@@ -80,8 +80,15 @@ text-align: center;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 100px;
+  max-width: 80px;
 }
+.ellipsis:hover{
+  overflow: visible;
+  max-width:none;
+  width:auto;
+  background-color: #fff!important;
+}
+
 .small {
 	font-size: xx-small;
 }

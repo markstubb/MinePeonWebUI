@@ -136,7 +136,6 @@ include('menu.php');
 					</form>
 					
         </div>
-		<?php if($donation == 0) { echo $plea; } ?>
 <?php
-
 include('foot.php');
+?>
