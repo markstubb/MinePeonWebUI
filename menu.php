@@ -1,4 +1,4 @@
-<div class="navbar navbar-fixed-top">
+<div class="navbar">
   <div class="container">
     <a class="navbar-brand" href="http://mineforeman.com/minepeon/">MinePeon</a>
     <ul class="nav navbar-nav">
