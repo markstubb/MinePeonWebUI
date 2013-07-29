@@ -56,6 +56,13 @@ if (isset($_POST['userDevices'])) {
 	
 }
 
+if (isset($_POST['minHash'])) {
+
+	$settings['minHash'] = $_POST['minHash'];
+	writeSettings($settings);
+	
+}
+
 function formatOffset($offset) {
         $hours = $offset / 3600;
         $remainder = $offset % 3600;
@@ -130,7 +137,11 @@ include('menu.php');
 					<td>Expected Devices: </td>
 					<td><input type="text" value="<?php echo $settings['devices'] ?>" name="userDevices">
 					</td>
-					</tr>					
+					</tr>	
+					<td>Minimum Expected Harshrate (MH/s): </td>
+					<td><input type="text" value="<?php echo $settings['minHash'] ?>" name="minHash">
+					</td>
+					</tr>										
 					<table>
 					<input type="submit" value="Save Settings">
 					</form>
