@@ -87,7 +87,7 @@ include('menu.php');
         <dt>Miner Version</dt>
         <dd><?php echo $summary['STATUS'][0]['Description']; ?></dd>
         <dt>Donation Minutes</dt>
-        <dd><?php echo $settings['donation']; if ($settings['donation'] == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></dd>
+        <dd><?php echo $settings['donation']."</dd>"; if ($settings['donation'] == 0) { echo '<dd><marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></dd>'; } ?>
       </dl>
     </div>
   </div>

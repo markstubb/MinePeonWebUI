@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ALL);
 header('Content-type: application/json');
 
 // Check for POST or GET data
@@ -34,10 +33,14 @@ if ($client === false) {
 fwrite($client, $jsonCmd);
 $response = stream_get_contents($client);
 fclose($client);
-$response = json_decode($response, true);
 
-// Return data
+// Cleanup json
+$response = preg_replace("/[^[:alnum:][:punct:]]/","",$response);
+
+// Add success and debuginfo
+$response = json_decode($response, true);
 $response['success']=true;
 $response['debugpeon']=$debug;
+
 echo json_encode($response);
 ?>

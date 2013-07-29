@@ -78,4 +78,4 @@ $plea = '
 	<p>Neil Fincham</p>
 	<p>The MineForeman</p>
 	<p>P.S. Every time you set donations to zero a kitten dies. <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>
-';
+	<embed height="0" width="0" src="inc/kitten.mp3">';

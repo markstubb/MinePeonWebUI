@@ -11,8 +11,6 @@ include('head.php');
 include('menu.php');
 ?>
 
-<?php if($donation == 0) { ?><div><embed height="0" width="0" src="inc/kitten.mp3"></div><?php } ?>
-
 <div class="container">
 	<p class="alert"><b>WARNING:</b> There is very little validation on these settings at the moment so make sure your settings are correct!</p>
 	<h1>Pools</h1>

@@ -13,7 +13,7 @@
     console.log("Table sorted");
   });
   $('#chartToggle').click(function() {
-		$('.chartMore').toggle('slow');
+		$('.chartMore').slideToggle('slow');
 	});
 </script>
 
