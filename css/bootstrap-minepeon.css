@@ -1,3 +1,17 @@
+
+/* Structure */
+body{
+  padding-bottom: 50px;
+}
+
+/* Navbar */
+.navbar-brand:before {
+  position: absolute;
+  content: url(logo.png);
+  margin: -6px 0 0 -40px;
+}
+
+/* Nicer quote */
 blockquote {
   font-family: Georgia, serif;
   font-size: 14px;
@@ -21,60 +35,18 @@ blockquote:before {
 }
 
 blockquote cite {
-color: #999999;
-font-size: 14px;
-display: block;
-margin-top: 5px;
+  color: #999999;
+  font-size: 14px;
+  display: block;
+  margin-top: 5px;
 }
- 
+
 blockquote cite:before {
-content: "\2014 \2009";
+  content: "\2014 \2009";
 }
 
-table.status 
-{
-}
-table.status tr 
-{
-}
-table.status th
-{
-}
-table.status td 
-{
-}
 
-table.stats 
-{
-}
-table.stats tr 
-{
-}
-table.stats th
-{
-}
-table.stats td 
-{
-}
-
-table.pools 
-{
-}
-table.pools tr 
-{
-}
-table.pools th
-{
-}
-table.pools td 
-{
-}
-
-.graph 
-{ 
-text-align: center; 
-}
-
+/* Shorten wide values in tables and show them on hover */
 .ellipsis{
   overflow: hidden;
   text-overflow: ellipsis;
@@ -88,16 +60,6 @@ text-align: center;
   width:auto;
   background-color: #fff!important;
 }
-
-.small {
-	font-size: xx-small;
-}
-.larger {
-	font-size: large;
-}
-
-
-
 
 
 /* Tablesorter */

@@ -28,7 +28,8 @@ $port = 4028;
 $client = stream_socket_client("tcp://$host:$port", $errno, $errorMessage);
 
 if ($client === false) {
-	throw new UnexpectedValueException("Failed to connect: $errorMessage");
+	echo json_encode(array('success' => false, 'debug' => $errno." ".$errorMessage));
+	exit;
 }
 fwrite($client, $jsonCmd);
 $response = stream_get_contents($client);

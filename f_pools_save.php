@@ -11,23 +11,29 @@ if (empty($_REQUEST['saving']) or !$_REQUEST['saving']) {
 //initialize a limit to the number of pools that are added to the miner config file. is there an official limit?
 $poolLimit = 20;
 
-// as long as the POST URL, USER and PASS data are present and the count is under the poolLimit, process the POST data
-$j = 0;
-while (!empty($_REQUEST['URL'.$j.'']) and !empty($_REQUEST['USER'.$j.'']) and $j<$poolLimit) {
+// Loop through all rows, stop after 3 empty rows or if poolLimit is exceeded, process the POST or GET data
+$e = 0;
+for($i=0;$i<$poolLimit || $e < 3;$i++) {
+	if(!empty($_REQUEST['URL'.$i]) and !empty($_REQUEST['USER'.$i])){
 
-	// Set pool at j
-	$dataPools[$j] = array(
-		"label" => $_REQUEST['LABEL'.$j],
-		"url" => $_REQUEST['URL'.$j],
-		"user" => $_REQUEST['USER'.$j],
-		"pass" => $_REQUEST['PASS'.$j],
-		);
+		// Set pool data
+		// Avoid empty pool passwords because it might be problematic if used in a command
+		$dataPools[] = array(
+			"url" => $_REQUEST['URL'.$i],
+			"user" => $_REQUEST['USER'.$i],
+			"pass" => empty($_REQUEST['PASS'.$i])?"none":$_REQUEST['PASS'.$i]
+			);
+
+		// reset empty
+		$e = 0;
+	}
+	else{
+		// increment empty count
+		$e++;
+	}
 
 	// debug output
-	// echo $_REQUEST['URL'.$j.''] . $_REQUEST['USER'.$j.''] . $_REQUEST['PASS'.$j.''];
-
-	// increment count
-	$j++;
+	// echo $_REQUEST['URL'.$i.''] . $_REQUEST['USER'.$i.''] . $_REQUEST['PASS'.$i.''];
 }
 
 $written = 0;

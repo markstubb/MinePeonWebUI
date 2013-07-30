@@ -22,23 +22,17 @@ include('menu.php');
 		$countOfPools = count($data['pools']);
 		for ($i = 0; $i < $countOfPools; $i++) {
 			?>
-			<div class="row">
-				<div class="col-lg-2">
-					<p>
-						<label for="LABEL<?php echo $i; ?>">Label</label>
-						<input type="text" class="form-control" value="<?php echo $data['pools'][$i]['label']; ?>" name="LABEL<?php echo $i; ?>" id="LABEL<?php echo $i; ?>">
-					</p>
-				</div>
-				<div class="col-lg-4">
-					<label for="URL<?php echo $i; ?>">URL</label>
+			<div class="form-group row">
+				<div class="col-lg-5">
+					<label for="URL<?php echo $i; ?>"><span class="label label-success">Enabled</span> URL</label>
 					<input type="url" class="form-control" value="<?php echo $data['pools'][$i]['url']; ?>" name="URL<?php echo $i; ?>" id="URL<?php echo $i; ?>">
 				</div>
-				<div class="col-lg-4">
+				<div class="col-lg-5">
 					<label for="USER<?php echo $i; ?>">Username</label>
 					<input type="text" class="form-control" value="<?php echo $data['pools'][$i]['user']; ?>" name="USER<?php echo $i; ?>" id="USER<?php echo $i; ?>">
 				</div>
 				<div class="col-lg-2">
-					<label for="PASS<?php echo $i; ?>">Password</label>
+					<label for="PASS<?php echo $i; ?>">Password <small class="text-muted">(optional)</small></label>
 					<input type="text" class="form-control" value="<?php echo $data['pools'][$i]['pass']; ?>" name="PASS<?php echo $i; ?>" id="PASS<?php echo $i; ?>">
 				</div>
 			</div>
@@ -49,23 +43,17 @@ include('menu.php');
 		for ($i = $countOfPools; $i < $countOfPools+$extraPools; $i++) {
 			?>
 
-			<div class="row">
-				<div class="col-lg-2">
-					<p>
-						<label for="LABEL<?php echo $i; ?>">Label</label>
-						<input type="text" class="form-control" name="LABEL<?php echo $i; ?>" id="LABEL<?php echo $i; ?>">
-					</p>
-				</div>
-				<div class="col-lg-4">
-					<label for="URL<?php echo $i; ?>">URL</label>
+			<div class="form-group row">
+				<div class="col-lg-5">
+					<label for="URL<?php echo $i; ?>"><span class="label label-info">New</span> URL</label>
 					<input type="url" class="form-control" name="URL<?php echo $i; ?>" id="URL<?php echo $i; ?>">
 				</div>
-				<div class="col-lg-4">
+				<div class="col-lg-5">
 					<label for="USER<?php echo $i; ?>">Username</label>
 					<input type="text" class="form-control" name="USER<?php echo $i; ?>" id="USER<?php echo $i; ?>">
 				</div>
 				<div class="col-lg-2">
-					<label for="PASS<?php echo $i; ?>">Password</label>
+					<label for="PASS<?php echo $i; ?>">Password <small class="text-muted">(optional)</small></label>
 					<input type="text" class="form-control" name="PASS<?php echo $i; ?>" id="PASS<?php echo $i; ?>">
 				</div>
 			</div>
@@ -73,7 +61,8 @@ include('menu.php');
 		}
 		?>
 		<p>After saving, the miner will restart with the new configuration. This takes about 10 seconds.</p>
-		<p><button type="button" class="btn btn-success" value="" id="save">Save pools</button> <span class="save-msg"></span></p>
+		<p><button type="button" class="btn btn-default" value="" id="save">Submit</button></p>
+		<p class="save-msg"></p>
 	</form>
 </div>
 <?php
@@ -82,10 +71,17 @@ include('foot.php');
 
 <script type="text/javascript">
 $(document).ready(function() {
+	if(window.location.search=="?sr"){
+		$('.save-msg').addClass('alert-success alert').text("Pool data succesfully saved and miner restarted.");
+	}
+	else if(window.location.search=="?s-"){
+		$('.save-msg').addClass('alert-warning alert').text('Pool data succesfully saved. But failed to restart miner.');
+	}
+
 	$('#save').click( function() {
 
 		console.log("Saving pool data");
-		$('.save-msg').text('Saving pool data');
+		$('.save-msg').addClass('alert alert-info').text('Saving pool data');
 
 		$.ajax({
 			url: 'f_pools_save.php',
@@ -96,13 +92,31 @@ $(document).ready(function() {
 				console.log("Debug: "+JSON.stringify(data.debug));
 
 				if(data.success){
-					$('.save-msg').text('Pool data succesfully saved');
+					$('.save-msg').text('Pool data succesfully saved.');
 					console.log("Pool data saved");
 					console.log("Settings: "+data.written+" bytes");
+
 					console.log("Restarting miner");
-					$.get('f_miner.php?command=restart', function(data) {
-						console.log("Debug: "+JSON.stringify(data));
+					var restarted=false;
+
+					$.get('f_miner.php?command=restart', function(d) {
+						console.log("Debug: "+JSON.stringify(d));
+						if(d.success){
+							restarted=true;
+						}
+					})
+					.always(function() { 
+						console.log("Reloading page");
+						if(restarted){
+							window.location="?sr";
+						}
+						else{
+							window.location="?s-";
+						}
 					});
+				}
+				else{
+					$('.save-msg').addClass('alert alert-danger').text('Could not save pool data.');
 				}
 			}
 		});

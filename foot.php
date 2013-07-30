@@ -10,11 +10,17 @@
 <script type="text/javascript" id="js">
   $(document).ready(function() {
     $(".tablesorter").tablesorter();
-    console.log("Table sorted");
+    
+    $('#chartToggle').click(function() {
+      $('.chartMore').slideToggle('slow');
+    });
+    $('#alertEnable').click(function() {
+      $(".alert-enabled").toggle(this.checked);
+    });
+    $('#donateEnable').click(function() {
+      $(".donate-enabled").toggle(this.checked);
+    });
   });
-  $('#chartToggle').click(function() {
-		$('.chartMore').slideToggle('slow');
-	});
 </script>
 
 </body>
