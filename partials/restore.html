@@ -1,0 +1,27 @@
+<h2>Restore settings from backup</h2>
+
+
+<form class="form-horizontal">
+	<fieldset>
+		<legend>Available backups</legend>
+		<div class="form-group">
+			<label for="backupName" class="control-label col-lg-2">Backup from</label>
+			<div class="col-lg-10">
+				<div class="input-group">
+					<input type="text" placeholder="Folder" id="backupName" name="backupName" class="form-control" ng-model="folders[select].name">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default" ng-click="restore()">Restore now!</button>
+					</div>
+				</div>
+				<div class="checkbox" ng-repeat="folder in folders">
+					<label ng-click="select($index)">
+						<input type="checkbox" ng-model="folder.selected">
+						{{folder.name}}
+						<span class="label label-success" ng-show="folder.bak">restored</span>
+					</label>
+				</div>
+				<p class="help-block">Restore function not yet implemented.</p>
+			</div>
+		</div>
+	</fieldset>
+</form>

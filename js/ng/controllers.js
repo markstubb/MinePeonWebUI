@@ -3,6 +3,36 @@
 /* Controllers */
 
 angular.module('Peon.controllers', [])
+.controller('CtrlRestore', function($scope,$http) {
+  $scope.thisFolder = "/opt/minepeon/";
+  $scope.backupFolder = "/opt/minepeon/etc/backup/";
+
+  $scope.folders={};
+  $scope.select=0;
+
+  $http.get('f_restore_list.php').success(function(d){
+    console.log(d.success);
+    if(d.success){
+      $scope.folders=d.folders;
+      $scope.select=0;
+      $scope.folders[0].selected=true;
+      $scope.backupName=d.folders[0].name;
+    }
+  });
+
+  $scope.restore = function() {
+
+  };
+  $scope.select = function(index) {
+    // Unselect previous
+    $scope.folders[$scope.select].selected=false;
+
+    // Select this
+    $scope.select=index;
+    $scope.folders[index].selected=true;
+    $scope.backupName=$scope.folders[index].name;
+  };
+})
 .controller('CtrlBackup', function($scope,$http) {
   $scope.thisFolder = "/opt/minepeon/";
   $scope.backupFolder = "/opt/minepeon/etc/backup/";
