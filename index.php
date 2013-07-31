@@ -257,10 +257,12 @@ function poolsTable($pools) {
       $rowclass = 'success';
 
     }
+	
+	$poolURL = explode(":", str_replace("/", "", $pool['URL']));
 
     $table = $table . "
     <tr class='" . $rowclass . "'>
-    <td class='ellipsis'>" . $pool['URL'] . "</td>
+    <td class='ellipsis'>" . $poolURL[1] . "</td>
     <td class='ellipsis'>" . $pool['User'] . "</td>
     <td>" . $pool['Status'] . "</td>
     <td>" . $pool['Priority'] . "</td>
