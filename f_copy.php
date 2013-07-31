@@ -1,4 +1,8 @@
 <?php
+/*
+f_copy copies a file or a folder recursively
+returns success?, errors and debug data
+*/
 header('Content-type: application/json');
 
 // Check for POST or GET data
@@ -10,6 +14,7 @@ if (empty($_REQUEST['src']) || empty($_REQUEST['dst'])) {
 $src = $_REQUEST['src'];
 $dst = $_REQUEST['dst'];
 
+// Might be used to copy a folder recursively if src is a folder
 function recurse_copy($src,$dst,$level=3) {
 	$success=true;
 	if($level==0) return $success;
@@ -48,10 +53,7 @@ if (!is_writable($dstDir)) {
 if (!is_readable($src)) {
 	$r['error'][]="Source file is not readable";
 }
-elseif (is_file($src)&&is_dir($dst)) {
-	$r['error'][]="File and folder mixup";
-}
-elseif (is_dir($src)&&is_file($dst)) {
+elseif (is_file($src)&&is_dir($dst) || is_dir($src)&&is_file($dst)) {
 	$r['error'][]="File and folder mixup";
 }
 elseif (is_file($dst)) {
