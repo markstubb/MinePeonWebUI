@@ -1,0 +1,68 @@
+<h2>Backup settings</h2>
+
+
+<form class="form-horizontal">
+	<fieldset>
+		<legend>Settings</legend>
+		<div class="form-group">
+			<label for="backupName" class="control-label col-lg-2">Backup to</label>
+			<div class="col-lg-10">
+				<div class="input-group">
+					<tt class="input-group-addon">{{backupFolder}}</tt>
+					<input type="text" placeholder="Folder" id="backupName" name="backupName" class="form-control" ng-model="backupName">
+				</div>
+				<p class="help-block">Best leave this as is.</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-2">
+				Files<br />
+				{{selFile()}} of {{files.length}} selected
+			</label>
+			<div class="col-lg-10">
+				<div class="checkbox" ng-repeat="file in files">
+					<label ng-class="{muted: !file.selected}">
+						<input type="checkbox" ng-model="file.selected">
+						/opt/minepeon/{{file.name}}
+						<span class="label label-success" ng-show="file.bak">done</span>
+					</label>
+				</div>
+				<div class="input-group">
+					<tt class="input-group-addon">{{thisFolder}}</tt>
+					<input type="text" ng-model="newFile" placeholder="add more files here" class="form-control">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default" ng-click="addFile()">Add file</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-2">
+				Folders<br />
+				{{selFolder()}} of {{folders.length}} selected
+			</label>
+			<div class="col-lg-10">
+				<div class="checkbox" ng-repeat="folder in folders">
+					<label ng-class="{muted: !folder.selected}">
+						<input type="checkbox" ng-model="folder.selected">
+						/opt/minepeon/{{folder.name}}
+						<span class="label label-success" ng-show="folder.bak">done</span>
+					</label>
+				</div>
+				<div class="input-group">
+					<tt class="input-group-addon">{{thisFolder}}</tt>
+					<input type="text" ng-model="newFolder" placeholder="add more folders here" class="form-control">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default" ng-click="addFolder()">Add folder</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+    <div class="form-group">
+      <div class="col-lg-10 col-offset-2">
+        <button type="button" class="btn btn-default" ng-click="backup()">Backup</button>
+      </div>
+    </div>
+	</fieldset>
+</form>

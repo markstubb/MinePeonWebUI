@@ -46,12 +46,19 @@ include('head.php');
 include('menu.php');
 ?>
 <div class="container">
-  <p class="pull-right text-right">
+  <h2>Status</h2>
+  <p class="text-center">
     <img src="rrd/mhsav-hour.png" alt="mhsav.png" />
     <img src="rrd/mhsav-day.png" alt="mhsav.png" /><br/>
-    <a href="#">More charts...</a>
+    <a href="#" id="chartToggle">Toggle charts</a>
   </p>
-  <h2 class=" clearfix">Status</h2>
+  <p class="text-center collapse chartMore">
+    <img src="rrd/mhsav-week.png" alt="mhsav.png" />
+    <img src="rrd/mhsav-month.png" alt="mhsav.png" />
+  </p>
+  <p class="text-center collapse chartMore">
+    <img src="rrd/mhsav-year.png" alt="mhsav.png" />
+  </p>
   <div class="row">
     <div class="col-lg-4">
       <dl class="dl-horizontal">
@@ -80,7 +87,7 @@ include('menu.php');
         <dt>Miner Version</dt>
         <dd><?php echo $summary['STATUS'][0]['Description']; ?></dd>
         <dt>Donation Minutes</dt>
-        <dd><?php echo $settings['donation']; if ($settings['donation'] == 0) { echo ' <marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></p>'; } ?></dd>
+        <dd><?php echo $settings['donation']."</dd>"; if ($settings['donation'] == 0) { echo '<dd><marquee direction="left" scrollamount="3" behavior="scroll" style="width: 60px; height: 15px; color: #ff0000; font-size: 11px; text-decoration: blink;">Kitten Killer!</marquee></dd>'; } ?>
       </dl>
     </div>
   </div>
@@ -92,11 +99,11 @@ include('menu.php');
         <th>URL</th>
         <th>User</th>
         <th>Status</th>
-        <th>Priority</th>
-        <th>Getworks</th>
-        <th>Accept</th>
-        <th>Reject</th>
-        <th>Discard</th>
+        <th title="Priority">Pr</th>
+        <th title="GetWorks">GW</th>
+        <th title="Accept">Acc</th>
+        <th title="Reject">Rej</th>
+        <th title="Discard">Disc</th>
         <th title="Last Share Time">Last</th>       
         <th title="Difficulty 1 Shares">Diff1</th>        
         <th title="Difficulty Accepted">DAcc</th>
@@ -130,9 +137,7 @@ include('menu.php');
     </tbody>
   </table>
 </div>
-<?php if($settings['donation'] == 0) { echo $plea; } ?>
 <?php
-
 include('foot.php');
 
 function statsTable($devs) {
@@ -256,8 +261,8 @@ function poolsTable($pools) {
 	$poolURL = explode(":", str_replace("/", "", $pool['URL']));
 
     $table = $table . "
-    <tr  class='" . $rowclass . "'>
-    <td>" . $poolURL[1] . "</td>
+    <tr class='" . $rowclass . "'>
+    <td class='ellipsis'>" . $poolURL[1] . "</td>
     <td class='ellipsis'>" . $pool['User'] . "</td>
     <td>" . $pool['Status'] . "</td>
     <td>" . $pool['Priority'] . "</td>
@@ -267,8 +272,8 @@ function poolsTable($pools) {
     <td>" . $pool['Discarded'] . "</td>
     <td>" . date('H:i:s', $pool['LastShareTime']) . "</td>        
     <td>" . $pool['Diff1Shares'] . "</td>       
-    <td>" . $pool['DifficultyAccepted'] . " ["  . (!$pool['Diff1Shares'] == 0 ? round(($pool['DifficultyAccepted'] / $pool['Diff1Shares']) * 100, 2) : 0) .  "%]</td>
-    <td>" . $pool['DifficultyRejected'] . " ["  . (!$pool['Diff1Shares'] == 0 ? round(($pool['DifficultyRejected'] / $pool['Diff1Shares']) * 100, 2) : 0) .  "%]</td>
+    <td>" . $pool['DifficultyAccepted'] . "&nbsp;["  . (!$pool['Diff1Shares'] == 0 ? round(($pool['DifficultyAccepted'] / $pool['Diff1Shares']) * 100, 2) : 0) .  "%]</td>
+    <td>" . $pool['DifficultyRejected'] . "&nbsp;["  . (!$pool['Diff1Shares'] == 0 ? round(($pool['DifficultyRejected'] / $pool['Diff1Shares']) * 100, 2) : 0) .  "%]</td>
     <td>" . $pool['LastShareDifficulty'] . "</td>
     <td>" . $pool['BestShare'] . "</td>     
     </tr>";
