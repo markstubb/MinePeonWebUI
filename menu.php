@@ -5,6 +5,8 @@
       <li><a href="/">Status</a></li>
       <li><a href="pools.php">Pools</a></li>
       <li><a href="settings.php">Settings</a></li>
+      <li><a href="advanced.html">Advanced</a></li>
+      <li><a href="miner.php">Miner</a></li>
       <li><a href="about.php">About</a></li>
       <li><a href="contact.php">Contact</a></li>
       <li><a href="license.php">License</a></li> 

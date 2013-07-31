@@ -11,7 +11,7 @@ body{
   margin: -6px 0 0 -40px;
 }
 
-/* Nicer quote */
+/* About / Nicer quote */
 blockquote {
   font-family: Georgia, serif;
   font-size: 14px;
@@ -45,8 +45,12 @@ blockquote cite:before {
   content: "\2014 \2009";
 }
 
+/* Advanced / Mute unselected filenames */
+.muted {
+    color: rgb(153, 153, 153);
+}
 
-/* Shorten wide values in tables and show them on hover */
+/* Index / Shorten wide values in tables and show them on hover */
 .ellipsis{
   overflow: hidden;
   text-overflow: ellipsis;
