@@ -262,7 +262,7 @@ function poolsTable($pools) {
 
     $table = $table . "
     <tr class='" . $rowclass . "'>
-    <td class='ellipsis'>" . $poolURL[1] . "</td>
+    <td>" . $poolURL[1] . "</td>
     <td class='ellipsis'>" . $pool['User'] . "</td>
     <td>" . $pool['Status'] . "</td>
     <td>" . $pool['Priority'] . "</td>
