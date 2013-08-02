@@ -4,19 +4,28 @@
 
 angular.module('Peon.controllers', [])
 .controller('CtrlStatus', function($scope,$http,$timeout) {
-  $scope.wut = {"status":"Loading status..."};
+  $scope.stat = {"status":"Loading status..."};
+  $scope.refresh = 2000;
+
+
   $scope.prettystatus = function() {
-    return JSON.stringify($scope.wut, undefined, 2);
+    return JSON.stringify($scope.stat, undefined, 2);
   };
 
+  // Update values
+  var oldcpu={"idle":0,"tot":0};
   (function tick() {
     $http.get('f_status.php').success(function(d){
       if(d.success){
-        $scope.wut=d;
+        $scope.stat=d;
+        $scope.load=(d.cpu.idle-oldcpu.idle)/(d.cpu.tot-oldcpu.tot);
+        oldcpu.idle=d.cpu.idle;
+        oldcpu.tot=d.cpu.tot;
       }
-      $timeout(tick, 1000);
+      $timeout(tick, $scope.refresh);
     })
   })();
+
 })
 .controller('CtrlRestore', function($scope,$http) {
   $scope.thisFolder = "/opt/minepeon/";

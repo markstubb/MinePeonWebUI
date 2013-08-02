@@ -10,8 +10,8 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/bootstrap-minepeon.css" rel="stylesheet">
 </head>
-<body>
-	<div class="navbar">
+<body ng-controller="CtrlStatus">
+	<div class="navbar navbar-static-top">
 		<div class="container">
 			<a class="navbar-brand" href="http://mineforeman.com/minepeon/">MinePeon</a>
 			<ul class="nav navbar-nav">
@@ -25,16 +25,32 @@
 			</ul>
 		</div>
 	</div>
+  <div class="statusbar">
+		<div class="container">
+	  	<span my-value="1-stat.load" my-show="1-stat.load|percent" low="0.2" high=".9">load</span>
+	  	<span my-value="stat.minepeon.cpu[0]" my-show="stat.minepeon.cpu[0]" low="0.2" high="1">cpu</span>
+	  	<span my-value="stat.minepeon.temp" my-show="stat.minepeon.temp|temp" low="35" high="50">temp</span>
+	  	<span class="pull-right">
+	  		<label>Refresh</label>
+		  	<button class="btn btn-default" ng-click="refresh(0)">Now</button>
+		  	<button class="btn btn-default" ng-click="refresh(1000)">1</button>
+		  	<button class="btn btn-default" ng-click="refresh(5000)">5</button>
+		  	<button class="btn btn-default" ng-click="refresh(20000)">20</button>
+		  	<button class="btn btn-default" ng-click="refresh(-1)">Stop</button>
+		  </span>
+		</div>
+  </div>
 	<div class="container">
-		<a href="#/status" class="btn btn-default">Status</a>
-		<a href="#/backup" class="btn btn-default">Backup</a>
-		<a href="#/restore" class="btn btn-default">Restore</a>
-		<a href="phpliteAdmin" class="btn btn-default">Database Admin</a>
-		<a href="miner.php" class="btn btn-default">Miner.php</a>
+		<a class="btn btn-default" href="#/status">Status</a>
+		<a class="btn btn-default" href="#/backup">Backup</a>
+		<a class="btn btn-default" href="#/restore">Restore</a>
+		<a class="btn btn-default" href="phpliteAdmin">Database Admin</a>
+		<a class="btn btn-default" href="miner.php">Miner.php</a>
 
     <div ng-view>
     	<p>
-    	Loading angular.js the first time might take some seconds... Hang tight!
+	    	Loading angular.js the first time might take some seconds... Hang tight!
+	    </p>
     </div>
   </div>
 

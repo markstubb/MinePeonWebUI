@@ -5,10 +5,7 @@ body{
 }
 
 /* Navbar */
-.navbar-brand:before {
-  position: absolute;
-  content: url(logo.png);
-  margin: -6px 0 0 -40px;
+.navbar{
 }
 
 /* About / Nicer quote */
@@ -49,6 +46,35 @@ blockquote cite:before {
 .muted {
     color: rgb(153, 153, 153);
 }
+.statusbar{
+  margin-top: -20px;
+  margin-bottom: 20px;
+  background: #ccc;
+  padding: 5px
+}
+
+.statusValue {
+  cursor: text;
+  background: #888;
+  color: #fff;
+  min-width: 100px;
+  -webkit-transition:background 5s,width 20s;
+  transition:background 5s,width 20s;
+}
+
+.statusValue small {
+  font-size: 75%;
+}
+
+.statusValue span {
+  display: inline-block;
+  padding-left: 5px;
+  line-height: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
 
 /* Index / Shorten wide values in tables and show them on hover */
 .ellipsis{
