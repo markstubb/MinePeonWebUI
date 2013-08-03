@@ -5,10 +5,7 @@ body{
 }
 
 /* Navbar */
-.navbar-brand:before {
-  position: absolute;
-  content: url(logo.png);
-  margin: -6px 0 0 -40px;
+.navbar{
 }
 
 /* About / Nicer quote */
@@ -49,6 +46,54 @@ blockquote cite:before {
 .muted {
     color: rgb(153, 153, 153);
 }
+
+/* Advanced / Statusbar */
+.statusbar{
+  margin-top: -20px;
+  background: #ccc;
+  padding: 5px
+}
+.statusbar span.btn {
+  cursor: text;
+  min-width: 100px;
+  display: inline-block;
+  -webkit-transition:background 2s,width 20s;
+  transition:background 2s,width 20s;
+}
+.statusbar span.btn small {
+  font-size: 75%;
+}
+.statusbar span.btn span {
+  display: inline-block;
+  font-weight: bold;
+}
+
+/* Advanced / Statusbar / Rate controls */
+.statusbar button {
+  background: none;
+}
+.statusbar button:hover {
+  background: #aaa!important;
+}
+.statusbar .disabled {
+  background: #fff;
+}
+.btn:hover, .btn:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Advanced / Status / Rate controls */
+.rate-control button {
+  background: none;
+}
+.rate-control button:hover {
+  background: #aaa!important;
+}
+.rate-control .disabled {
+  background: #ccc;
+}
+
 
 /* Index / Shorten wide values in tables and show them on hover */
 .ellipsis{

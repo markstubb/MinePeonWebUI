@@ -1,0 +1,102 @@
+<span class="pull-right rate-control">
+	<button class="btn" ng-click="tick(true)" title="Refresh just once">Refresh</button>
+	<button class="btn" ng-click="setRate(1000)"  ng-class="{disabled:rate==1000}" title="Refresh data every second">1</button>
+	<button class="btn" ng-click="setRate(5000)"  ng-class="{disabled:rate==5000}" title="Refresh data every 5 seconds">5</button>
+	<button class="btn" ng-click="setRate(30000)" ng-class="{disabled:rate==30000}" title="Refresh data every 30 seconds">30</button>
+	<button class="btn" ng-click="setRate(-1)" ng-class="{disabled:rate>600000}" title="Stop refreshing">Stop</button>
+</span>
+
+<h2>Status</h2>
+
+<h3>Pools</h3>
+<table id="pools" class="tablesorter table table-bordered table-condensed table-hover table-striped">
+	<thead> 
+		<tr>
+			<th>URL</th>
+			<th>User</th>
+			<th>Status</th>
+			<th><div title="Priority">Pr</div></th>
+			<th><div title="GetWorks">GW</div></th>
+			<th><div title="Accepted">Acc</div></th>
+			<th><div title="Rejected">Rej</div></th>
+			<th><div title="Discarded">Disc</div></th>
+			<th><div title="Last Share Time">Last</div></th>       
+			<th><div title="Difficulty 1 Shares">Diff1</div></th>        
+			<th><div title="Difficulty Accepted">DAcc</div></th>
+			<th><div title="Difficulty Rejected">DRej</div></th>
+			<th><div title="Last Share Difficulty">DLast</div></th>
+			<th><div title="Best Share">Best</div></th>      
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="p in pools" ng-class="{success:p.Status=='Alive',error:p.Status!='Alive'}">
+			<td ng-bind="p.URL|shortUrl"></td>
+			<td ng-bind="p.User" class='ellipsis'></td>
+			<td ng-bind="p.Status"></td>        
+			<td ng-bind="p.Priority"></td>
+			<td ng-bind="p.Getworks"></td>
+			<td ng-bind="p.Accepted"></td>
+			<td ng-bind="p.Rejected"></td>
+			<td ng-bind="p.Discarded"></td>
+			<td ng-bind="p.LastShareTime|fromStamp|fromNow"></td>
+			<td ng-bind="p.Diff1Shares"></td>       
+			<td ng-bind-template="{{p.DifficultyAccepted}}&nbsp;[{{100*p.DifficultyAccepted/p.Diff1Shares|number:2}}%]"></td>
+			<td ng-bind-template="{{p.DifficultyRejected}}&nbsp;[{{100*p.DifficultyRejected/p.Diff1Shares|number:2}}%]"></td>
+			<td ng-bind="p.LastShareDifficulty"></td>
+			<td ng-bind="p.BestShare"></td>     
+		</tr>
+	</tbody>
+</table>
+
+<h3>Devices</h3>
+<div class='alert alert-danger' ng-hide="devs">No devices running</div>
+<table id="stats" class="tablesorter table table-bordered table-condensed table-hover table-striped" ng-show="devs">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>ID</th>
+			<th>Temp</th>
+			<th>MH/s 5s</th>
+			<th>MH/s av</th>
+			<th>Accepted</th>
+			<th>Rejected</th>
+			<th>HW Errors</th>
+			<th>Utility</th>
+			<th>Last Share Time</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in devs" ng-class="{error:d.Rejected/(d.Accepted+d.Rejected+d.HardwareErrors) > .05 || d.HardwareErrors/(d.Accepted+d.Rejected+d.HardwareErrors) > .1}">
+			<td ng-bind="d.Name"></td>
+			<td ng-bind="d.ID"></td>
+			<td ng-bind="d.Temperature"></td>
+			<td ng-bind="d.MHS5s"></td>
+			<td ng-bind="d.MHSav"></td>
+			<td ng-bind="d.Accepted"></td>
+			<td ng-bind-template="{{d.Rejected}}&nbsp;[{{100*d.Rejected/(d.Accepted+d.Rejected+d.HardwareErrors)|number:2}}%]"></td>
+			<td ng-bind-template="{{d.HardwareErrors}}&nbsp;[{{100*d.HardwareErrors/(d.Accepted+d.Rejected+d.HardwareErrors)|number:2}}%]"></td>
+			<td ng-bind="d.Utility"></td>
+			<td ng-bind="d.LastShareTime|fromStamp|fromNow"></td>
+		</tr>
+	</tbody>
+	<tfoot>
+  	<tr>
+		  <th colspan="3">Totals</th>
+		  <th ng-bind="dtot.ID"></th>
+		  <th ng-bind="dtot.MHSav"></th>
+		  <th ng-bind="dtot.Accepted"></th>
+			<td ng-bind-template="{{dtot.Rejected}}&nbsp;[{{100*dtot.Rejected/(dtot.TotalShares)|number:2}}%]"></td>
+			<td ng-bind-template="{{dtot.HardwareErrors}}&nbsp;[{{100*dtot.HardwareErrors/(dtot.TotalShares)|number:2}}%]"></td>
+		  <th ng-bind="dtot.Utility">" . $ . "</th>
+		  <th></th>
+	  </tr>
+  </tfoot>
+</table>
+
+<!--
+	Uncomment this to debug.
+	It will display all data fetched from f_status.php in pretty json
+<pre>
+	{{stat|json}}
+</pre>
+-->
