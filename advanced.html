@@ -10,49 +10,60 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/bootstrap-minepeon.css" rel="stylesheet">
 </head>
-<body ng-controller="CtrlStatus">
+<body>
 	<div class="navbar navbar-static-top">
 		<div class="container">
-			<a class="navbar-brand" href="http://mineforeman.com/minepeon/">MinePeon</a>
+			<a class="navbar-brand" href="#/">Advanced</a>
 			<ul class="nav navbar-nav">
-				<li><a href="/">Status</a></li>
-				<li><a href="pools.php">Pools</a></li>
-				<li><a href="settings.php">Settings</a></li>
-				<li><a href="advanced.html">Advanced</a></li>
-				<li><a href="about.php">About</a></li>
-				<li><a href="contact.php">Contact</a></li>
-				<li><a href="license.php">License</a></li> 
+				<li><a href="/"><b class="text-primary">Back to normal</b></a></li>
+				<li><a href="#/status">Status</a></li>
+				<li><a href="#/backup">Backup</a></li>
+				<li><a href="#/restore">Restore</a></li>
+				<li><a href="phpliteAdmin">Database Admin</a></li>
+				<li><a href="miner.php">Miner.php</a></li>
 			</ul>
 		</div>
 	</div>
-  <div class="statusbar">
+	<div class="statusbar" ng-controller="CtrlStatusBar">
 		<div class="container">
-	  	<span my-value="1-stat.load" my-show="1-stat.load|percent" low="0.2" high=".9">load</span>
-	  	<span my-value="stat.minepeon.cpu[0]" my-show="stat.minepeon.cpu[0]" low="0.2" high="1">cpu</span>
-	  	<span my-value="stat.minepeon.temp" my-show="stat.minepeon.temp|temp" low="35" high="50">temp</span>
-	  	<span class="pull-right">
-	  		<label>Refresh</label>
-		  	<button class="btn btn-default" ng-click="refresh(0)">Now</button>
-		  	<button class="btn btn-default" ng-click="refresh(1000)">1</button>
-		  	<button class="btn btn-default" ng-click="refresh(5000)">5</button>
-		  	<button class="btn btn-default" ng-click="refresh(20000)">20</button>
-		  	<button class="btn btn-default" ng-click="refresh(-1)">Stop</button>
-		  </span>
+			<span class="btn" status-item="-statbar.mhsav" low="-1000000" high="-300000" title="cgMiner > Summary > MhsAv">
+				<span ng-bind="statbar.mhsav|number"></span>
+				<small> MH/s</small>
+			</span>
+			<span class="btn" status-item="cpu" low="0.2" high=".9" title="CPU usage since last update">
+				<small>cpu </small>
+				<span ng-bind="cpu*100|number:1"></span>
+				<small> %</small>
+			</span>
+			<span class="btn" status-item="statbar.load" low="0.3" high="1" title="PHP CPU load 1 minute average">
+				<small>load </small>
+				<span ng-bind="statbar.load*100|number:1"></span>
+				<small> %</small>
+			</span>
+			<span class="btn" status-item="statbar.temp" low="35" high="50" title="Raspberry Pi temperature">
+				<small>temp </small>
+				<span ng-bind="statbar.temp"></span>
+				<small> °C</small>
+			</span>
+			<span class="pull-right">
+				<button class="btn" ng-click="tick(true)" title="Refresh just once">Refresh</button>
+				<button class="btn" ng-click="setRate(1000)"  ng-class="{disabled:rate==1000}" title="Refresh data every second">1</button>
+				<button class="btn" ng-click="setRate(5000)"  ng-class="{disabled:rate==5000}" title="Refresh data every 5 seconds">5</button>
+				<button class="btn" ng-click="setRate(30000)" ng-class="{disabled:rate==30000}" title="Refresh data every 30 seconds">30</button>
+				<button class="btn" ng-click="setRate(-1)" ng-class="{disabled:rate>600000}" title="Stop refreshing">Stop</button>
+			</span>
 		</div>
-  </div>
-	<div class="container">
-		<a class="btn btn-default" href="#/status">Status</a>
-		<a class="btn btn-default" href="#/backup">Backup</a>
-		<a class="btn btn-default" href="#/restore">Restore</a>
-		<a class="btn btn-default" href="phpliteAdmin">Database Admin</a>
-		<a class="btn btn-default" href="miner.php">Miner.php</a>
+	</div>
 
-    <div ng-view>
-    	<p>
-	    	Loading angular.js the first time might take some seconds... Hang tight!
-	    </p>
-    </div>
-  </div>
+	<div class="container">
+		<div ng-view>
+			<p>
+				Loading angular.js the first time might take some seconds... Hang tight!
+			</p>
+		</div>
+	</div>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 
 	<script src="js/ng/angular.min.js"></script> 
 	<script src="js/ng/app.js"></script>
@@ -61,5 +72,6 @@
 	<script src="js/ng/filters.js"></script>
 	<script src="js/ng/directives.js"></script>
 	<script src="js/ng/moment.min.js"></script>
+	<script src="js/jquery.tablesorter.js"></script>
 </body>
 </html>

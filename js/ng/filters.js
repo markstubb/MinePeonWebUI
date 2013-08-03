@@ -8,13 +8,20 @@ angular.module('Peon.filters', [])
 		return moment(date).fromNow();
 	}
 })
-.filter('percent', function() {
-	return function(number) {
-		return Math.round(100*number) + " %";
+.filter('shortUrl', function() {
+	return function(temp) {
+		return temp.replace('//', '').split(':')[1];
 	}
 })
-.filter('temp', function() {
-	return function(temp) {
-		return temp + " °C";
+.filter('mhs', function() {
+	return function(mhs) {
+		if(mhs<1000){
+			return mhs;
+		}
+	}
+})
+.filter('fromStamp', function() {
+	return function(timestamp) {
+		return new Date(timestamp*1000);
 	}
 });
