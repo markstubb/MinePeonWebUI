@@ -7,51 +7,83 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/bootstrap-minepeon.css" rel="stylesheet">
 </head>
 <body>
 	<div class="navbar navbar-static-top">
 		<div class="container">
-			<a class="navbar-brand" href="#/">Advanced</a>
 			<ul class="nav navbar-nav">
-				<li><a href="/"><b class="text-primary">Back to normal</b></a></li>
-				<li><a href="#/status">Status</a></li>
-				<li><a href="#/backup">Backup</a></li>
-				<li><a href="#/restore">Restore</a></li>
+				<li menu-active><a ng-href="#/status">Status</a></li>
+				<li menu-active><a ng-href="#/backup">Backup</a></li>
+				<li menu-active><a ng-href="#/restore">Restore</a></li>
 				<li><a href="phpliteAdmin">Database Admin</a></li>
 				<li><a href="miner.php">Miner.php</a></li>
+				<li><a href="/"><b class="text-primary"><i class="icon-btc"></i>ack to normal</b></a></li>
 			</ul>
 		</div>
 	</div>
-	<div class="statusbar" ng-controller="CtrlStatusBar">
+	<div class="statusbar peon-trigger" ng-controller="CtrlStatusBar">
 		<div class="container">
-			<span class="btn" status-item="-statbar.mhsav" low="-1000000" high="-300000" title="cgMiner > Summary > MhsAv">
+			<span class="btn" status-item="statbar.mhsav" good="miningExpHash" bad="miningExpHash*.8" title="cgMiner > Summary > MhsAv">
 				<span ng-bind="statbar.mhsav|number"></span>
 				<small> MH/s</small>
 			</span>
-			<span class="btn" status-item="cpu" low="0.2" high=".9" title="CPU usage since last update">
+			<span class="btn" status-item="1" good="miningExpDev" bad="miningExpDev-2" title="Running devices">
+				<span ng-bind-template="1 / {{miningExpDev}}"></span>
+				<small> devs</small>
+			</span>
+			<span class="btn" status-item="cpu" good="0.1" bad="0.9" title="CPU usage since last update">
 				<small>cpu </small>
 				<span ng-bind="cpu*100|number:1"></span>
 				<small> %</small>
 			</span>
-			<span class="btn" status-item="statbar.load" low="0.3" high="1" title="PHP CPU load 1 minute average">
+			<span class="btn" status-item="statbar.load" good="0.3" bad="1" title="PHP CPU load 1 minute average">
 				<small>load </small>
 				<span ng-bind="statbar.load*100|number:1"></span>
 				<small> %</small>
 			</span>
-			<span class="btn" status-item="statbar.temp" low="35" high="50" title="Raspberry Pi temperature">
+			<span class="btn" status-item="statbar.temp" good="35" bad="50" title="Raspberry Pi temperature">
 				<small>temp </small>
 				<span ng-bind="statbar.temp"></span>
 				<small> °C</small>
 			</span>
-			<span class="pull-right">
-				<button class="btn" ng-click="tick(true)" title="Refresh just once">Refresh</button>
-				<button class="btn" ng-click="setRate(1000)"  ng-class="{disabled:rate==1000}" title="Refresh data every second">1</button>
-				<button class="btn" ng-click="setRate(5000)"  ng-class="{disabled:rate==5000}" title="Refresh data every 5 seconds">5</button>
-				<button class="btn" ng-click="setRate(30000)" ng-class="{disabled:rate==30000}" title="Refresh data every 30 seconds">30</button>
-				<button class="btn" ng-click="setRate(-1)" ng-class="{disabled:rate>600000}" title="Stop refreshing">Stop</button>
-			</span>
+			<div class="peon-settings">
+				<div class="peon-more">
+					<button class="btn" ng-click="setRate(-1)" ng-class="{disabled:rate>600000}" title="Stop refreshing">Stop</button>
+					<button class="btn" ng-click="setRate(1000)"  ng-class="{disabled:rate==1000}" title="Refresh data every second">1</button>
+					<button class="btn" ng-click="setRate(5000)"  ng-class="{disabled:rate==5000}" title="Refresh data every 5 seconds">5</button>
+					<button class="btn" ng-click="setRate(30000)" ng-class="{disabled:rate==30000}" title="Refresh data every 30 seconds">30</button>
+				</div>
+				<button class="btn" ng-click="tick(true)" title="Refresh just once"><i class="icon-refresh"></i></button>
+				<button class="btn" ng-click="editSettings=!editSettings" title="Status page settings"><i class="icon-wrench"></i></button>
+			</div>
+		  <form class="form-horizontal" ng-show="editSettings">
+		    <fieldset>
+		      <div class="form-group">
+		        <label for="miningExpDev" class="control-label col-lg-2">Expected Devices</label>
+		        <div class="col-lg-4">
+		          <input type="number" ng-model="miningExpDev" ng-init="miningExpDev=1" class="form-control">
+		          <p class="help-block" ng-show="settings.helpEnable">
+		            If the count of active devices falls below this value, an alert will be sent.
+		          </p>
+		        </div>
+		        <label for="miningExpHash" class="control-label col-lg-2">Expected Hashrate</label>
+		        <div class="col-lg-4">
+		          <div class="input-group">
+		            <input type="number" ng-model="miningExpHash" ng-init="miningExpHash=900000" class="form-control">
+		            <span class="input-group-addon">MH/s</span>
+		          </div>
+		          <p class="help-block" ng-show="settings.helpEnable">
+		            If the hashrate falls below half this value for more than a minute, an alert will be sent.<br/>
+		            After 3 minutes cgminer will be restarted.
+		          </p>
+		        </div>
+		      </div>
+		    </fieldset>
+		  </form>
+			</div>
 		</div>
 	</div>
 
