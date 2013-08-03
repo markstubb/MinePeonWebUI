@@ -5,7 +5,8 @@ body{
 }
 
 /* Navbar */
-.navbar{
+.navbar-nav > li > a:hover, .navbar-nav > li > a:focus{
+  background: #fff;
 }
 
 /* About / Nicer quote */
@@ -50,7 +51,7 @@ blockquote cite:before {
 /* Advanced / Statusbar */
 .statusbar{
   margin-top: -20px;
-  background: #ccc;
+  background: #d5d5d5;
   padding: 5px
 }
 .statusbar span.btn {
@@ -67,33 +68,43 @@ blockquote cite:before {
   display: inline-block;
   font-weight: bold;
 }
+.statusbar form{
+  margin-top: 20px;
+}
 
-/* Advanced / Statusbar / Rate controls */
-.statusbar button {
+/* Advanced / Settings component */
+.peon-settings{
+  float:right;
+  white-space: nowrap;
+}
+.peon-more{
+  float:left;
+  margin-right: 5px;
+  visibility: hidden;
+}
+.peon-trigger:hover .peon-more{
+  visibility: visible;
+}
+
+/* Advanced / Settings component / buttons */
+.peon-settings button {
   background: none;
 }
-.statusbar button:hover {
-  background: #aaa!important;
+.peon-settings button:hover {
+  background: #bbb!important;
 }
-.statusbar .disabled {
-  background: #fff;
+.peon-settings .disabled {
+  background: #ccc;
 }
-.btn:hover, .btn:focus {
+.peon-settings .btn:hover, .peon-settings .btn:focus {
   color: inherit;
   text-decoration: none;
 }
 
-/* Advanced / Status / Rate controls */
-.rate-control button {
-  background: none;
+/* Advanced / Statusbar / Rate controls */
+.statusbar .peon-settings .disabled {
+  background: #fff;
 }
-.rate-control button:hover {
-  background: #aaa!important;
-}
-.rate-control .disabled {
-  background: #ccc;
-}
-
 
 /* Index / Shorten wide values in tables and show them on hover */
 .ellipsis{

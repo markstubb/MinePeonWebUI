@@ -3,30 +3,30 @@
 /* Directives */
 angular.module('Peon.directives', [])
 
-// This directive can probable be constructed better
+// Sets background color by interpolating between green and red.
+// Thinking about oth interpolation functions or maybe more colors
 .directive('statusItem', function() {
 	return function(scope, element, attrs) {
-		var v=attrs.statusItem; // Value to check low and high against
-    var l=attrs.low; // Threshold low: green
-    var h=attrs.high; // Threshold high: red
+		var i=attrs.statusItem;
+		var g=attrs.good; // Threshold good: green
+		var b=attrs.bad; // Threshold bad: red
 
-		// Update UI
-		function updateValue() {
-			if(v>l){
-				element.css('background','rgb('+Math.round(200-(h-v)/(h-l)*255)+','+Math.round((h-v)/(h-l)*200)+',0)');
-				element.css('color','#fff');
-			}
-			else{
-				element.removeAttr('style');
-			}
+		function update(){
+			var x=2*(i-g)/(b-g);
+			element.css('background',(b==g)?'#666':'rgb('+Math.round(Math.min(x, 1)*200)+','+Math.round((2 - Math.max(x, 1)) * 150)+',0)');
+			element.css('color','#fff');
 		}
 
-		// Watch these realtime values
-		scope.$watch(attrs.statusItem, function(value) {
-			v = value;
-			updateValue();
+		scope.$watch(attrs.good,       function(v) {g=v;update();});
+		scope.$watch(attrs.bad,        function(v) {b=v;update();});
+		scope.$watch(attrs.statusItem, function(v) {i=v;update();});
+	}
+})
+// Toggles .active based on $location.path()
+.directive('menuActive', function($rootScope,$location) {
+	return function(scope, element, attrs) {
+		$rootScope.$on("$routeChangeStart", function (event, next, current) {
+			(element.children()[0].hash === "#"+$location.path()) ? element.addClass("active") : element.removeClass("active");
 		});
-
-		updateValue();
 	}
 });

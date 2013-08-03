@@ -1,10 +1,13 @@
-<span class="pull-right rate-control">
-	<button class="btn" ng-click="tick(true)" title="Refresh just once">Refresh</button>
-	<button class="btn" ng-click="setRate(1000)"  ng-class="{disabled:rate==1000}" title="Refresh data every second">1</button>
-	<button class="btn" ng-click="setRate(5000)"  ng-class="{disabled:rate==5000}" title="Refresh data every 5 seconds">5</button>
-	<button class="btn" ng-click="setRate(30000)" ng-class="{disabled:rate==30000}" title="Refresh data every 30 seconds">30</button>
-	<button class="btn" ng-click="setRate(-1)" ng-class="{disabled:rate>600000}" title="Stop refreshing">Stop</button>
-</span>
+<div class="peon-settings peon-trigger">
+	<div class="peon-more">
+		<button class="btn" ng-click="setRate(-1)" ng-class="{disabled:rate>600000}" title="Stop refreshing">Stop</button>
+		<button class="btn" ng-click="setRate(1000)"  ng-class="{disabled:rate==1000}" title="Refresh data every second">1</button>
+		<button class="btn" ng-click="setRate(5000)"  ng-class="{disabled:rate==5000}" title="Refresh data every 5 seconds">5</button>
+		<button class="btn" ng-click="setRate(30000)" ng-class="{disabled:rate==30000}" title="Refresh data every 30 seconds">30</button>
+	</div>
+	<button class="btn" ng-click="tick(true)" title="Refresh just once"><i class="icon-refresh"></i></button>
+	<button class="btn" ng-click="settings()" title="Status page settings"><i class="icon-wrench"></i></button>
+</div>
 
 <h2>Status</h2>
 
