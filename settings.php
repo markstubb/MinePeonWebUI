@@ -256,7 +256,7 @@ include('menu.php');
       <div class="form-group alert-enabled <?php echo $settings['alertEnable']?"":"collapse"; ?>">
         <label for="alertSmtp" class="control-label col-lg-3">SMTP Server</label>
         <div class="col-lg-9">
-          <input type="url" value="<?php echo $settings['alertSmtp'] ?>" id="alertSmtp" name="alertSmtp" class="form-control">
+          <input type="text" value="<?php echo $settings['alertSmtp'] ?>" id="alertSmtp" name="alertSmtp" class="form-control">
           <p class="help-block">Please choose your own SMTP server.</p>
         </div>
       </div>
