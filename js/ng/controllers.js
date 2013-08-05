@@ -96,6 +96,7 @@ angular.module('Peon.controllers', [])
   $scope.backupFolder = "/opt/minepeon/etc/backup/";
   $scope.backupName = GetDateTime()+"/";
   $scope.files = [
+  {selected:true,bak:false,name:"etc/minepeon.conf"},
   {selected:true,bak:false,name:"etc/miner.conf"},
   {selected:true,bak:false,name:"etc/miner.conf.donate"},
   {selected:true,bak:false,name:"etc/miner.conf.tmp"},
