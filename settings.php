@@ -55,10 +55,7 @@ if (isset($_POST['donateEnable']) and isset($_POST['donateAmount'])) {
     $settings['donateAmount'] = 0;
   }
   $writeSettings=true;
-
-  // This variable is used below
-  $donation=$settings['donateAmount'];
-
+  
 }
 
 // Alert settings
