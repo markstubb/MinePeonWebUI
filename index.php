@@ -137,22 +137,6 @@ include('menu.php');
     </tbody>
   </table>
 </div>
-<pre>
-<?php
-
-$opts = array ('AVERAGE'); 
-$data = rrd_fetch('/opt/minepeon/var/rrd/hashrate.rrd', $opts);
-
-foreach ($data['data']['hashrate'] as $key => $value) {
-  if(!is_nan($value) && $value!=0){
-    $d[$key]=$value;
-  }
-}
-
-print_r($d); 
-
-?>
-</pre>
 <?php
 include('foot.php');
 
