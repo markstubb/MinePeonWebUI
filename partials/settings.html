@@ -1,6 +1,6 @@
 <h2>Settings</h2>
 
-<form class="form-horizontal">
+<form name="f" class="form-horizontal">
   <fieldset>
     <legend>User</legend>
     <div class="form-group">
@@ -11,20 +11,27 @@
             <input type="checkbox" id="helpEnable" ng-model="settings.helpEnable"> Show info about settings and how the interface works
           </label>
         </div>
+        <p class="help-block" ng-show="settings.helpEnable">Don't forget to check out the information on other pages.</p>
       </div>
     </div>
     <div class="form-group">
       <label for="userTimezone" class="control-label col-lg-2">Timezone</label>
       <div class="col-lg-10">
         <input type="text" id="userTimezone" ng-model="settings.userTimezone" class="form-control">
-        <p class="help-block">MinePeon thinks it is now {{1000*settings.time|date:'yyyy-MM-dd HH:mm:ss'}}</p>
+        <p class="help-block">MinePeon thinks it is now {{1000*settings.time|date:'yyyy-MM-dd HH:mm:ss'}} <a href="" ng-click="sync('timezone',1)">Update system timezone</a></p>
       </div>
     </div>
     <div class="form-group">
       <label for="userPassword" class="control-label col-lg-2">New Password</label>
       <div class="col-lg-10">
-        <input type="password" placeholder="New password" id="userPassword" ng-model="settings.userPassword" class="form-control">
+        <input type="password" placeholder="New password" id="userPassword" name="userPassword" ng-model="userPassword" class="form-control">
+        <p class="help-block" ng-show="settings.helpEnable">You need this password to access this webinterface.</p>
         <p class="help-block" ng-show="settings.helpEnable">An empty password will not be saved.</p>
+      </div>
+    </div>
+    <div class="form-group" ng-show="f.userPassword.$dirty">
+      <div class="col-lg-10 col-offset-2">
+        <button type="button" class="btn btn-success" ng-click="sync('pass',userPassword)">Save password</button>
       </div>
     </div>
   </fieldset>
@@ -32,7 +39,7 @@
   <fieldset>
     <legend>Mining</legend>
     <div class="form-group">
-      <label for="miningRecover" class="control-label col-lg-2">Miner process</label>
+      <label for="miningRecover" class="control-label col-lg-2">Monitor process</label>
       <div class="col-lg-10">
         <div class="checkbox">
           <label>
@@ -40,7 +47,13 @@
           </label>
         </div>
         <p class="help-block" ng-show="settings.helpEnable">
-          MinePeon will notice a dropping hashrate and do a restart
+          Every 5 minutes, a monitoring process evaluates the following: amount of devices running, device hashrate and pool stats.
+        </p>
+        <p class="help-block" ng-show="settings.helpEnable">
+          When MinePeon detects something wrong with any of the above it will send you an email telling you about the problem. If you enable this option the following actions will be taken:<br />
+          Within 5 minutes: Send the miner API a restart to try and fix it.<br />
+          Within 10 minutes: Failing a miner restart MinePeon will "kill -9" the miner and reload it.<br />
+          Within 15 minutes: Failing that MinePeon will reboot itself to attempt a fix.
         </p>
       </div>
     </div>

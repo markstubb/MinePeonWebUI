@@ -19,8 +19,11 @@ angular.module('Peon.filters', [])
 			return hs+" M";
 		}
 		hs/=1000;
-		return (hs<1000)?(hs).toPrecision(3)+" G":(hs/1000).toPrecision(3)+" T";
+		return (hs<1000)?(hs).toPrecision(4)+" G":(hs/1000).toPrecision(4)+" T";
 	}
+})
+.filter('hashps', function() {
+	return function(hs) {return hs+"hash/s";}
 })
 .filter('fromStamp', function() {
 	return function(timestamp) {

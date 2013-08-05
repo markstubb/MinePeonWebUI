@@ -20,6 +20,9 @@ if(isset($_REQUEST['dev'])){
   $r['devs'][]=array("Name"=>"Debug","ID"=>1,"Temperature"=>rand(20,35),"MHS5s"=>rand(0,10000000),"MHSav"=>rand(100000,120000),"LongPoll"=>"N","Getworks"=>1076,"Accepted"=>1324,"Rejected"=>1,"HardwareErrors"=>46,"Utility"=>1.2,"LastShareTime"=>time()-rand(0,40));
   $r['devs'][]=array("Name"=>"Wut","ID"=>2,"Temperature"=>rand(20,35),"MHS5s"=>rand(0,100000),"MHSav"=>rand(6000,8000),"LongPoll"=>"N","Getworks"=>1076,"Accepted"=>1324,"Rejected"=>1,"HardwareErrors"=>46,"Utility"=>1.2,"LastShareTime"=>time()-rand(0,300));
   $r['devs'][]=array("Name"=>"More","ID"=>2,"Temperature"=>rand(20,35),"MHS5s"=>rand(0,1000),"MHSav"=>rand(6000,8000),"LongPoll"=>"N","Getworks"=>1076,"Accepted"=>1324,"Rejected"=>1,"HardwareErrors"=>46,"Utility"=>1.2,"LastShareTime"=>time()-rand(0,300));
+
+  // Debug data
+  $r['pools'][]=array("POOL"=>5,"URL"=>"http://stratum.mining.eligius.st:3334","Status"=>"Alive","Priority"=>9,"LongPoll"=>"N","Getworks"=>10760,"Accepted"=>50430,"Rejected"=>60,"Discarded"=>21510,"Stale"=>0,"GetFailures"=>0,"RemoteFailures"=>0,"User"=>"1BveW6ZoZmx31uaXTEKJo5H9CK318feKKY","LastShareTime"=>1375501281,"Diff1Shares"=>20306,"ProxyType"=>"","Proxy"=>"","DifficultyAccepted"=>20142,"DifficultyRejected"=>24,"DifficultyStale"=>0,"LastShareDifficulty"=>4,"HasStratum"=>true,"StratumActive"=>true,"StratumURL"=>"stratum.mining.eligius.st","HasGBT"=>false,"BestShare"=>40657);
 }
 
 $devices = 0;

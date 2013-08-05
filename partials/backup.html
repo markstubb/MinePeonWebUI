@@ -10,7 +10,7 @@
 					<tt class="input-group-addon">{{backupFolder}}</tt>
 					<input type="text" placeholder="Folder" id="backupName" name="backupName" class="form-control" ng-model="backupName">
 				</div>
-				<p class="help-block">Best leave this as is.</p>
+				<p class="help-block">This folder will be created and the selected items will be copied into this folder.</p>
 			</div>
 		</div>
 		<div class="form-group">
@@ -24,6 +24,7 @@
 						<input type="checkbox" ng-model="file.selected">
 						/opt/minepeon/{{file.name}}
 						<span class="label label-success" ng-show="file.bak">done</span>
+						<span class="label label-danger"  ng-show="file.fail">fail</span>
 					</label>
 				</div>
 				<div class="input-group">
@@ -46,6 +47,7 @@
 						<input type="checkbox" ng-model="folder.selected">
 						/opt/minepeon/{{folder.name}}
 						<span class="label label-success" ng-show="folder.bak">done</span>
+						<span class="label label-danger"  ng-show="folder.fail">fail</span>
 					</label>
 				</div>
 				<div class="input-group">
@@ -60,6 +62,10 @@
 
     <div class="form-group">
       <div class="col-lg-10 col-offset-2">
+				<p class="help-block">
+					Backed up items will be confirmed by a green label.
+					If this does not show up for some items, click backup again and MinePeon will attempt to backup the not yet backed up items again.
+				</p>
         <button type="button" class="btn btn-default" ng-click="backup()">Backup</button>
       </div>
     </div>
