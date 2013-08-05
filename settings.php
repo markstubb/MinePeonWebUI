@@ -26,7 +26,7 @@ if (isset($_POST['userPassword'])) {
 // Mining settings
 if (isset($_POST['miningRecover'])) {
 
-  $settings['miningRecover'] = $_POST['miningRecover'];
+  $settings['miningRecover'] = $_POST['miningRecover']=="true";
   $writeSettings=true;
 
 }
@@ -46,12 +46,12 @@ if (isset($_POST['miningExpHash'])) {
 // Donation settings
 if (isset($_POST['donateEnable']) and isset($_POST['donateAmount'])) {
 
-  $settings['donateEnable'] = $_POST['donateEnable'];
+  $settings['donateEnable'] = $_POST['donateEnable']=="true";
   $settings['donateAmount'] = $_POST['donateAmount'];
 
   // If one of both 0, make them both
-  if (!$_POST['donateEnable'] || $_POST['donateAmount']<1) {
-    $settings['donateEnable'] = 0;
+  if ($_POST['donateEnable']=="false" || $_POST['donateAmount']<1) {
+    $settings['donateEnable'] = false;
     $settings['donateAmount'] = 0;
   }
   $writeSettings=true;
@@ -64,7 +64,7 @@ if (isset($_POST['donateEnable']) and isset($_POST['donateAmount'])) {
 // Alert settings
 if (isset($_POST['alertEnable'])) {
 
-  $settings['alertEnable'] = $_POST['alertEnable'];
+  $settings['alertEnable'] = $_POST['alertEnable']=="true";
   $writeSettings=true;
   
 }
