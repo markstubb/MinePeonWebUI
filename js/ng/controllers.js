@@ -4,122 +4,75 @@
 
 angular.module('Peon.controllers', [])
 // Statusbar with realtime updates
-.controller('CtrlStatusBar', function($scope,$http,$timeout) {
-  var prom=[], minRate = 500;
-  $scope.rate = 5000; // Default refresh rate
+.controller('CtrlStatusBar', function($scope,$rootScope,$http,$timeout) {
+  var prom=[], minRate = 500, req='all=1', oldSettings={};
+  $rootScope.settings={};
+  $scope.rate = 30000; // Default refresh rate
 
-  $(".btn").tooltip({'placement':'bottom'}); // Enable tooltips on status items
+  // Enable tooltips
+  $('span.btn').tooltip({placement:'bottom'});
+  $('button').tooltip({container: 'body'});
 
+  // Update values
   $scope.setRate = function(value) {
-    $timeout.cancel(prom.pop()); // Cancel current timeout
-    if(prom.length>20){angular.forEach(prom, function(p) {$timeout.cancel(p)}); }// Clean up more timeouts
+    angular.forEach(prom, function(p) {$timeout.cancel(p)});// Clean up timeouts
     if(value>=minRate){ // Set new timeout
       $scope.rate=value;
+      req='all=1';
       $scope.tick();
     }
     else{$scope.rate=600001;} // Off = 10 minutes
   };
 
-  // Update values
-  $scope.cpu = 0; // Prevents displaying NaN
-  var prevCpuIdle=0,prevCpuTot=0; // To compute beter cpu usage
+  // Get status and save in rootScope
   $scope.tick = function(once) {
-    $http.get('f_statusbar.php').success(function(d){
-      if(d.success){
-        $scope.statbar=d;
-        $scope.cpu=1-(d.cpuIdle-prevCpuIdle)/(d.cpuTot-prevCpuTot);
-        prevCpuIdle=d.cpuIdle;
-        prevCpuTot=d.cpuTot;
-      }
+    if($scope.settings.devEnable)req+='&dev=1';  
+    $http.get('f_status.php?'+req).success(function(d){
+      angular.forEach(d, function(v,k) {$rootScope[k]=v;});      
       if(!once){
         prom.push($timeout($scope.tick, $scope.rate));
       }
+      req='all=1'; //Set this to '' to disable temp checks 
     })
   }
-  
   $scope.tick();
-})
-.controller('CtrlStatus', function($scope,$http,$timeout) {
-  // Enable tooltips and tablesorter
-  $("th div").tooltip();
-  $(".tablesorter").tablesorter();
 
-  // Debug data
-  $scope.pools = [ {
-    "POOL": 0,
-    "URL": "http://stratum.mining.eligius.st:3334",
-    "Status": "Alive",
-    "Priority": 0,
-    "LongPoll": "N",
-    "Getworks": 1076,
-    "Accepted": 5043,
-    "Rejected": 6,
-    "Discarded": 2151,
-    "Stale": 0,
-    "GetFailures": 0,
-    "RemoteFailures": 0,
-    "User": "1BveW6ZoZmx31uaXTEKJo5H9CK318feKKY",
-    "LastShareTime": 1375501281,
-    "Diff1Shares": 20306,
-    "ProxyType": "",
-    "Proxy": "",
-    "DifficultyAccepted": 20142,
-    "DifficultyRejected": 24,
-    "DifficultyStale": 0,
-    "LastShareDifficulty": 4,
-    "HasStratum": true,
-    "StratumActive": true,
-    "StratumURL": "stratum.mining.eligius.st",
-    "HasGBT": false,
-    "BestShare": 40657
-  }
-  ];
-  $scope.devs = [ {
-    "Name": "Hoeba",
-    "ID": 0,
-    "Temperature": 24,
-    "MHS5s": 195665,
-    "MHSav": 213462,
-    "LongPoll": "N",
-    "Getworks": 1076,
-    "Accepted": 1324,
-    "Rejected": 1,
-    "HardwareErrors": 46,
-    "Utility": 1.2,
-    "LastShareTime": 1375502781
-  }
-  ];
-
-  var prom=[], minRate = 500;
-  $scope.rate = 5000; // Default refresh rate
-
-  $scope.setRate = function(value) {
-    $timeout.cancel(prom.pop()); // Cancel current timeout
-    if(prom.length>20){angular.forEach(prom, function(p) {$timeout.cancel(p)}); }// Clean up more timeouts
-    if(value>=minRate){ // Set new timeout
-      $scope.rate=value;
-      $scope.tick();
-    }
-    else{$scope.rate=600001;} // Off = 10 minutes
+  // show save button?
+  $scope.saveEnable = function() {
+    return !angular.equals( $rootScope.settings,oldSettings,true);
+  };
+  // Fetch settings
+  // Save param in settings, if not set, don't save
+  // Note: not possible to remove settings!
+  $scope.save = function(param) {
+    $http.get('f_settings.php?save='+angular.toJson(param)).success(function(d){
+      console.log(d)
+      angular.forEach(d, function(v,k) {
+        $rootScope.settings[k]=v;
+      });
+      angular.copy($rootScope.settings,oldSettings);
+    });
+  };
+  $scope.back = function() {
+    angular.copy(oldSettings,$rootScope.settings);
   };
 
-  // Update values
-  $scope.tick = function(once) {
-    $http.get('f_status.php').success(function(d){
-      if(d.success){
-        $scope.stat=d;
-        $scope.pools=d.pools;
-        $scope.devs=d.devs;
-        $scope.dtot=d.dtot;
-      }
-      if(!once){
-        prom.push($timeout($scope.tick, $scope.rate));
-      }
-    })
-  }
-  
-  prom.push($timeout($scope.tick, $scope.rate));
+  // Load current settings and save in rootScope
+  $scope.save(false);
 })
+
+
+.controller('CtrlStatus', function($scope) {
+  // Enable tooltips
+  $('th div').tooltip();
+  $('button').tooltip();
+})
+
+
+.controller('CtrlSettings', function($scope,$rootScope,$http) {
+})
+
+
 .controller('CtrlRestore', function($scope,$http) {
   $scope.thisFolder = "/opt/minepeon/";
   $scope.backupFolder = "/opt/minepeon/etc/backup/";
@@ -136,6 +89,8 @@ angular.module('Peon.controllers', [])
   $scope.restore = function() {
   };
 })
+
+
 .controller('CtrlBackup', function($scope,$http) {
   $scope.thisFolder = "/opt/minepeon/";
   $scope.backupFolder = "/opt/minepeon/etc/backup/";

@@ -1,5 +1,9 @@
 <?php
-error_reporting(E_ALL);
+/*
+f_pools_save saves the pools data
+returns success, bytes written and new pool data
+this file should be called f_pools.php and should be built like f_settings.php
+*/
 header('Content-type: application/json');
 
 // Check for POST or GET data
@@ -51,5 +55,5 @@ if (!empty($dataPools)) {
 	$written = file_put_contents("/opt/minepeon/etc/miner.conf", json_encode($data, JSON_PRETTY_PRINT));
 }
 
-echo json_encode(array('success' => true, 'written' => $written, 'debug' => $dataPools));
+echo json_encode(array('success' => true, 'written' => $written, 'pools' => $dataPools));
 ?>

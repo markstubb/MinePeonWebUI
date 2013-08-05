@@ -13,16 +13,16 @@ if ($handle = opendir($backupFolder)) {
 	while (false !== ($name = readdir($handle))) {
 		// Save all foldernames
 		if(is_dir($backupFolder.$name) && strpos($name, '.')===false){
-			$export['folders'][]['name']=$name;
+			$r['folders'][]['name']=$name;
 		}
 	}
 	closedir($handle);
 }
 else{
-	$export['error']="Could not read backupFolder.";
+	$r['error']="Could not read backupFolder.";
 }
 
-$export['success']=(!empty($export['folders']));
+$r['success']=(!empty($r['folders']));
 
-echo json_encode($export);
+echo json_encode($r);
 ?>

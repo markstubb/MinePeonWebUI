@@ -14,14 +14,17 @@ angular.module('Peon.filters', [])
 	}
 })
 .filter('mhs', function() {
-	return function(mhs) {
-		if(mhs<1000){
-			return mhs;
+	return function(hs) {
+		if(hs<1000){
+			return hs+" M";
 		}
+		hs/=1000;
+		return (hs<1000)?(hs).toPrecision(3)+" G":(hs/1000).toPrecision(3)+" T";
 	}
 })
 .filter('fromStamp', function() {
 	return function(timestamp) {
-		return new Date(timestamp*1000);
+		var m=moment.unix(timestamp);
+		return (m.minutes()>0?m.minutes()+'m ':'')+m.seconds()+'s';
 	}
 });
