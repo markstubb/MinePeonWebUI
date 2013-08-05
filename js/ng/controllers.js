@@ -5,8 +5,9 @@
 angular.module('Peon.controllers', [])
 // Statusbar with realtime updates
 .controller('CtrlStatusBar', function($scope,$rootScope,$http,$timeout) {
-  var prom=[], minRate = 500, req='all=1', oldSettings={};
+  var prom=[], minRate = 500, req='all=1', oldSettings={}, alertProm;
   $rootScope.settings={};
+  $rootScope.alerts=[{type:'success',text:'Welcome back!'}];
   $scope.rate = 30000; // Default refresh rate
 
   // Enable tooltips
@@ -41,15 +42,13 @@ angular.module('Peon.controllers', [])
   $scope.saveEnable = function() {
     return !angular.equals( $rootScope.settings,oldSettings,true);
   };
-  // Fetch settings
-  // Save param in settings, if not set, don't save
+  // Sync settings
   // Note: not possible to remove settings!
-  $scope.save = function(param) {
-    $http.get('f_settings.php?save='+angular.toJson(param)).success(function(d){
-      console.log(d)
-      angular.forEach(d, function(v,k) {
-        $rootScope.settings[k]=v;
-      });
+  $rootScope.sync = function(action,data) {
+    data = data || "lol";
+    $http.get('f_settings.php?'+(action||"load")+'='+angular.toJson(data)).success(function(d){
+      angular.forEach(d['info'], function(v,k) {$rootScope.alerts.push(v);});// Add to existing
+      angular.forEach(d['data'], function(v,k) {$rootScope.settings[k]=v;});// Overwrite existing
       angular.copy($rootScope.settings,oldSettings);
     });
   };
@@ -57,8 +56,30 @@ angular.module('Peon.controllers', [])
     angular.copy(oldSettings,$rootScope.settings);
   };
 
-  // Load current settings and save in rootScope
-  $scope.save(false);
+  // Load current settings
+  $scope.sync();
+
+  // Make alerts disappear after 10 seconds
+  $rootScope.$watch('alerts', function(b,a) {
+    if(b.length>5){
+      $rootScope.alerts.shift();
+    }
+    if(alertProm){return;}
+    if(b.length>1){//Added
+      alertProm=$timeout($scope.alertDismiss, 3000);
+    }
+    else if(b.length==1){//Added
+      alertProm=$timeout($scope.alertDismiss, 6000);
+    }
+  }, true);
+  $scope.alertDismiss = function() {
+    $('.alert-top').addClass('alert-dismiss');
+    $timeout($scope.alertShift, 1000);
+  };
+  $scope.alertShift = function() {
+    $rootScope.alerts.shift();
+    alertProm=false;
+  };
 })
 
 
@@ -96,15 +117,15 @@ angular.module('Peon.controllers', [])
   $scope.backupFolder = "/opt/minepeon/etc/backup/";
   $scope.backupName = GetDateTime()+"/";
   $scope.files = [
-  {selected:true,bak:false,name:"etc/minepeon.conf"},
-  {selected:true,bak:false,name:"etc/miner.conf"},
-  {selected:true,bak:false,name:"etc/miner.conf.donate"},
-  {selected:true,bak:false,name:"etc/miner.conf.tmp"},
-  {selected:true,bak:false,name:"etc/uipassword"},
-  {selected:true,bak:false,name:"etc/version"}
+  {selected:true,name:"etc/minepeon.conf"},
+  {selected:true,name:"etc/miner.conf"},
+  {selected:true,name:"etc/miner.conf.donate"},
+  {selected:true,name:"etc/miner.conf.tmp"},
+  {selected:true,name:"etc/uipassword"},
+  {selected:true,name:"etc/version"}
   ];
   $scope.folders = [
-  {selected:true,bak:false,name:"var/rrd"}
+  {selected:true,name:"var/rrd"}
   ];
 
   $scope.addFile = function() {
@@ -142,6 +163,9 @@ angular.module('Peon.controllers', [])
             $scope.files[i].bak=true;
             $scope.files[i].selected=false;
           }
+          else{
+            $scope.files[i].fail=true;
+          }
         });
       }
     });
@@ -152,6 +176,9 @@ angular.module('Peon.controllers', [])
           if(d.success){
             $scope.folders[i].bak=true;
             $scope.folders[i].selected=false;
+          }
+          else{
+            $scope.files[i].fail=true;
           }
         });
       }
