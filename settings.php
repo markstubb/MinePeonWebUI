@@ -6,29 +6,6 @@ require_once('miner.inc.php');
 // Check for settings to write and do it after all checks
 $writeSettings=false;
 
-// Migrate to more semantic settings
-// Keep it compatible with older versions with following code
-
-// If the versioning isn't found: translate old names to new + set settingsVersion to 1
-// And make sure it will save them
-/*
-if(empty($settings['settingsVersion'])){
-  $settings['settingsVersion']=1;
-
-  $settings['userTimezone'] = $settings['timezone'];
-  $settings['miningRecover'] = $settings['devices'];
-  $settings['miningExpDev'] = $settings['devices'];
-  $settings['miningExpHash'] = $settings['minHash'];
-  $settings['donateEnable'] = $settings['donation']>0?1:0;
-  $settings['donateAmount'] = $settings['donation'];
-  $settings['alertEnable'] = empty($settings['email'])?1:0;
-  $settings['alertDevice'] = $settings['deviceName'];
-  $settings['alertEmail'] = $settings['email'];
-  $settings['alertSmtp'] = $settings['smtp'];
-
-  $writeSettings=true;
-}*/
-
 // User settings
 if (isset($_POST['userTimezone'])) {
 
@@ -49,7 +26,7 @@ if (isset($_POST['userPassword'])) {
 // Mining settings
 if (isset($_POST['miningRecover'])) {
 
-  $settings['miningRecover'] = $_POST['miningRecover'];
+  $settings['miningRecover'] = $_POST['miningRecover']=="true";
   $writeSettings=true;
 
 }
@@ -69,12 +46,12 @@ if (isset($_POST['miningExpHash'])) {
 // Donation settings
 if (isset($_POST['donateEnable']) and isset($_POST['donateAmount'])) {
 
-  $settings['donateEnable'] = $_POST['donateEnable'];
+  $settings['donateEnable'] = $_POST['donateEnable']=="true";
   $settings['donateAmount'] = $_POST['donateAmount'];
 
   // If one of both 0, make them both
-  if (!$_POST['donateEnable'] || $_POST['donateAmount']<1) {
-    $settings['donateEnable'] = 0;
+  if ($_POST['donateEnable']=="false" || $_POST['donateAmount']<1) {
+    $settings['donateEnable'] = false;
     $settings['donateAmount'] = 0;
   }
   $writeSettings=true;
@@ -87,7 +64,7 @@ if (isset($_POST['donateEnable']) and isset($_POST['donateAmount'])) {
 // Alert settings
 if (isset($_POST['alertEnable'])) {
 
-  $settings['alertEnable'] = $_POST['alertEnable'];
+  $settings['alertEnable'] = $_POST['alertEnable']=="true";
   $writeSettings=true;
   
 }
@@ -112,22 +89,6 @@ if (isset($_POST['alertSmtp'])) {
 
 // Write settings
 if ($writeSettings) {
-
-  // Migrate to more semantic settings
-  // Keep it compatible with older versions with following code
-
-  // Save new names also in old ones
-  /*
-  $settings['timezone'] = $settings['userTimezone'];
-  $settings['devices'] = $settings['miningExpDev'];
-  $settings['minHash'] = $settings['miningExpHash'];
-  $settings['donation'] = $settings['donateAmount'];
-  $settings['deviceName'] = $settings['alertDevice'];
-  $settings['email'] = $settings['alertEmail'];
-  $settings['smtp'] = $settings['alertSmtp'];
-  */
-
-  // Sort settings on key
   ksort($settings);
   writeSettings($settings);
 }
