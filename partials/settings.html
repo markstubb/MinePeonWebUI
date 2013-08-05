@@ -32,6 +32,19 @@
   <fieldset>
     <legend>Mining</legend>
     <div class="form-group">
+      <label for="miningRecover" class="control-label col-lg-2">Miner process</label>
+      <div class="col-lg-10">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="miningRecover" ng-model="settings.miningRecover"> Automatically attempt recovery
+          </label>
+        </div>
+        <p class="help-block" ng-show="settings.helpEnable">
+          MinePeon will notice a dropping hashrate and do a restart
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
       <label for="miningExpDev" class="control-label col-lg-2">Expected Devices</label>
       <div class="col-lg-10">
         <input type="number" id="miningExpDev" ng-model="settings.miningExpDev" class="form-control">

@@ -11,10 +11,12 @@ $writeSettings=false;
 
 // If the versioning isn't found: translate old names to new + set settingsVersion to 1
 // And make sure it will save them
+/*
 if(empty($settings['settingsVersion'])){
   $settings['settingsVersion']=1;
 
   $settings['userTimezone'] = $settings['timezone'];
+  $settings['miningRecover'] = $settings['devices'];
   $settings['miningExpDev'] = $settings['devices'];
   $settings['miningExpHash'] = $settings['minHash'];
   $settings['donateEnable'] = $settings['donation']>0?1:0;
@@ -25,7 +27,7 @@ if(empty($settings['settingsVersion'])){
   $settings['alertSmtp'] = $settings['smtp'];
 
   $writeSettings=true;
-}
+}*/
 
 // User settings
 if (isset($_POST['userTimezone'])) {
@@ -45,6 +47,12 @@ if (isset($_POST['userPassword'])) {
 }
 
 // Mining settings
+if (isset($_POST['miningRecover'])) {
+
+  $settings['miningRecover'] = $_POST['miningRecover'];
+  $writeSettings=true;
+
+}
 if (isset($_POST['miningExpDev'])) {
 
   $settings['miningExpDev'] = $_POST['miningExpDev'];
@@ -109,6 +117,7 @@ if ($writeSettings) {
   // Keep it compatible with older versions with following code
 
   // Save new names also in old ones
+  /*
   $settings['timezone'] = $settings['userTimezone'];
   $settings['devices'] = $settings['miningExpDev'];
   $settings['minHash'] = $settings['miningExpHash'];
@@ -116,6 +125,7 @@ if ($writeSettings) {
   $settings['deviceName'] = $settings['alertDevice'];
   $settings['email'] = $settings['alertEmail'];
   $settings['smtp'] = $settings['alertSmtp'];
+  */
 
   // Sort settings on key
   ksort($settings);
@@ -182,6 +192,17 @@ include('menu.php');
     <fieldset>
       <legend>Mining</legend>
       <div class="form-group">
+        <label for="miningRecover" class="control-label col-lg-3">Miner process</label>
+        <div class="col-lg-9">
+          <div class="checkbox">
+            <input type='hidden' value='false' name='miningRecover'>
+            <label>
+              <input type="checkbox" <?php echo $settings['miningRecover']?"checked":""; ?> value="true" id="miningRecover" name="miningRecover"> Automatically attempt recovery
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
         <label for="miningExpDev" class="control-label col-lg-3">Expected Devices</label>
         <div class="col-lg-9">
           <input type="number" value="<?php echo $settings['miningExpDev'] ?>" id="miningExpDev" name="miningExpDev" class="form-control">
@@ -207,9 +228,9 @@ include('menu.php');
         <label for="donateAmount" class="control-label col-lg-3">Donation</label>
         <div class="col-lg-9">
           <div class="checkbox">
-            <input type='hidden' value='0' name='donateEnable'>
+            <input type='hidden' value='false' name='donateEnable'>
             <label>
-              <input type="checkbox" <?php echo $settings['donateEnable']?"checked":""; ?> value="1" id="donateEnable" name="donateEnable"> Enable donation
+              <input type="checkbox" <?php echo $settings['donateEnable']?"checked":""; ?> value="true" id="donateEnable" name="donateEnable"> Enable donation
             </label>
           </div>
           <div class="donate-enabled <?php echo $settings['donateEnable']?"":"collapse"; ?>">
@@ -234,9 +255,9 @@ include('menu.php');
       <div class="form-group">
         <div class="col-lg-9 col-offset-3">
           <div class="checkbox">
-            <input type='hidden' value='0' name='alertEnable'>
+            <input type='hidden' value='false' name='alertEnable'>
             <label>
-              <input type="checkbox" <?php echo $settings['alertEnable']?"checked":""; ?> value="1" id="alertEnable" name="alertEnable"> Enable e-mail alerts
+              <input type="checkbox" <?php echo $settings['alertEnable']?"checked":""; ?> value="true" id="alertEnable" name="alertEnable"> Enable e-mail alerts
             </label>
           </div>
         </div>
