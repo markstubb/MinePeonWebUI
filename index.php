@@ -93,7 +93,7 @@ include('menu.php');
   </div>
 
   <h3>Pools</h3>
-  <table id="pools" class="tablesorter table table-striped table-bordered table-hover">
+  <table id="pools" class="tablesorter table table-striped table-hover">
     <thead> 
       <tr>
         <th>URL</th>
@@ -113,29 +113,13 @@ include('menu.php');
       </tr>
     </thead>
     <tbody>
-      <?php echo poolsTable($pools['POOLS']);  ?>
+      <?php echo poolsTable($pools['POOLS']); ?>
     </tbody>
   </table>
 
   <h3>Devices</h3>
-  <table id="stats" class="tablesorter table table-striped table-bordered table-hover table-condensed stats">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>ID</th>
-        <th>Temp</th>
-        <th>MH/s</th>
-        <th>Accept</th>
-        <th>Reject</th>
-        <th>Error</th>
-        <th>Utility</th>
-        <th>Last Share</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php echo statsTable($devs);  ?>
-    </tbody>
-  </table>
+  <?php echo statsTable($devs); ?>
+  
 </div>
 <?php
 include('foot.php');
@@ -152,7 +136,21 @@ function statsTable($devs) {
   $HardwareErrors = 0;
   $Utility = 0;
 
-  $tableRow = "";
+  $tableRow = '<table id="stats" class="tablesorter table table-striped table-hover stats">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>ID</th>
+        <th>Temp</th>
+        <th>MH/s</th>
+        <th>Accept</th>
+        <th>Reject</th>
+        <th>Error</th>
+        <th>Utility</th>
+        <th>Last Share</th>
+      </tr>
+    </thead>
+    <tbody>';
 
   foreach ($devs as $dev) {
     $devShareTotal = $dev['Accepted'] + $dev['Rejected'] + $dev['HardwareErrors'];
@@ -161,7 +159,7 @@ function statsTable($devs) {
     if ($dev['MHS5s'] > 0) {
       $tableRow = $tableRow .
       ($hwErrorPercent >= 10 || $rejectedErrorPercent > 5 ? "<tr class=\"error\">" : "<tr>")
-      ."<td>" . $dev['Name'] . "</td>
+      ."<td class='text-left'>" . $dev['Name'] . "</td>
       <td>" . $dev['ID'] . "</td>
       <td>" . $dev['Temperature'] . "</td>
       <td><a href='http://mineforeman.com/bitcoin-mining-calculator/?hash=" . $dev['MHSav'] . "' target='_blank'>" . $dev['MHSav'] . "</a></td>
@@ -199,12 +197,11 @@ function statsTable($devs) {
   <th></th>
   </tr>
   </tfoot>
+  </tbody>
+  </table>
   ";
 
-
-
   return $tableRow;
-
 }
 
 function secondsToWords($seconds)
@@ -262,9 +259,9 @@ function poolsTable($pools) {
 
     $table = $table . "
     <tr class='" . $rowclass . "'>
-    <td>" . $poolURL[1] . "</td>
-    <td class='ellipsis'>" . $pool['User'] . "</td>
-    <td>" . $pool['Status'] . "</td>
+    <td class='text-left'>" . $poolURL[1] . "</td>
+    <td class='text-left ellipsis'>" . $pool['User'] . "</td>
+    <td class='text-left'>" . $pool['Status'] . "</td>
     <td>" . $pool['Priority'] . "</td>
     <td>" . $pool['Getworks'] . "</td>
     <td>" . $pool['Accepted'] . "</td>

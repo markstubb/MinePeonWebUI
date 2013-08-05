@@ -43,7 +43,18 @@ blockquote cite:before {
   content: "\2014 \2009";
 }
 
-td,tfoot th{text-align: right}
+/**/
+td,tfoot th{
+  text-align: right
+}
+
+.table>tbody>tr>td {
+  border: 1px solid #ddd;
+}
+.table>thead>tr>th{
+  border-bottom: 1px solid #ddd;
+  border-width:1px 1px 0 1px;
+}
 
 /* Advanced / Mute unselected filenames */
 .muted {
