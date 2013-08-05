@@ -11,7 +11,7 @@ Generic functions theat may be called from many differant places
 function sendEmail($settings, $subject, $body) {
 
 		$mailSettings = array(
-				'host' => $settings['smtp']
+				'host' => $settings['alertSmtp']
 			
 				/* ,
 				'auth' => true,
@@ -21,10 +21,11 @@ function sendEmail($settings, $subject, $body) {
 				*/
 			);
 	
-	
+		//$settings['alertDevice']
+
 		$mail = Mail::factory("smtp", $mailSettings );
 
-		$headers = array("From"=>$settings['email'], "Subject"=>$subject);
-		$mail->send($settings['email'], $headers, $body);		
+		$headers = array("From"=>$settings['alertEmail'], "Subject"=>$subject);
+		$mail->send($settings['alertEmail'], $headers, $body);		
 
 }
