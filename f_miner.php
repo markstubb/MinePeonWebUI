@@ -39,7 +39,7 @@ else{
 	$response = preg_replace("/[^[:alnum:][:punct:]]/","",$response);
 
 	// Add api response
-	$r += json_decode($response, true);
+	$r = json_decode($response, true);
 }
 
 $r['success'] = ($client === false);

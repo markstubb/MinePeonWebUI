@@ -18,7 +18,7 @@
       <label for="userTimezone" class="control-label col-lg-2">Timezone</label>
       <div class="col-lg-10">
         <input type="text" id="userTimezone" ng-model="settings.userTimezone" class="form-control">
-        <p class="help-block">MinePeon thinks it is now {{1000*settings.time|date:'yyyy-MM-dd HH:mm:ss'}} <a href="" ng-click="sync('timezone',1)">Update system timezone</a></p>
+        <p class="help-block">MinePeon thinks it is now {{1000*settings.time|date:'yyyy-MM-dd HH:mm:ss'}} <a href="" ng-click="sync('timezone',1,1)">Update system timezone</a></p>
       </div>
     </div>
     <div class="form-group">
@@ -35,9 +35,43 @@
       </div>
     </div>
   </fieldset>
+</form>
 
+<div class="form-horizontal">
   <fieldset>
     <legend>Mining</legend>
+    <form name="poolForm">
+      <div class="form-group">
+        <label for="poolsEdit" class="control-label col-lg-2">Manage pools</label>
+        <div class="col-lg-6 form-inline">
+          <button type="button" ng-bind="poolsEdit?'Hide editor':'Edit pools'" class="btn btn-default" ng-click="poolsEdit=!poolsEdit"></button>
+          <button type="button" ng-show="poolForm.$dirty" class="btn btn-danger" ng-click="poolBack()">Discard changes</button>
+          <button type="button" ng-show="poolForm.$dirty && poolForm.$valid" class="btn btn-success" ng-click="poolSave()">Save pools</button>
+        </div>
+      </div>
+      <div class="row" ng-show="poolsEdit">
+        <label class="col-lg-4 col-offset-2">URL</label>
+        <label class="col-lg-4">User</label>
+        <label class="col-lg-2">Pass</label>
+      </div>
+      <div class="form-group" ng-repeat="pool in pools" ng-show="poolsEdit">
+        <div class="control-label col-lg-2 text-danger"><a href="" ng-click="poolRemove($index)" class="text-danger">Remove</a></div>
+        <div class="col-lg-4">
+          <input type="text" ng-model="pool.url" class="form-control" required>
+        </div>
+        <div class="col-lg-4">
+          <input type="text" ng-model="pool.user" class="form-control" required>
+        </div>
+        <div class="col-lg-2">
+          <input type="text" ng-model="pool.pass" class="form-control" required>
+        </div>
+      </div>
+      <div class="form-group" ng-show="poolsEdit">
+        <div class="col-lg-2 col-offset-2">
+          <button type="button" ng-click="poolAdd()" class="btn btn-success">Add pool</button>
+        </div>
+      </div>
+    </form>
     <div class="form-group">
       <label for="miningRecover" class="control-label col-lg-2">Monitor process</label>
       <div class="col-lg-10">
@@ -116,7 +150,9 @@
       </div>
     </div>
   </fieldset>
+</div>
 
+<form class="form-horizontal">
   <fieldset>
     <legend>Alerts</legend>
     <div class="form-group">
@@ -148,7 +184,9 @@
       </div>
     </div>
   </fieldset>
+</form>
 
+<form class="form-horizontal">
   <fieldset>
     <legend>Developer</legend>
     <div class="form-group">

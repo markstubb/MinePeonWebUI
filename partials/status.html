@@ -1,7 +1,8 @@
 <h2>Status</h2>
 
 <h3>Pools</h3>
-<table id="pools" class="tablesorter table table-hover table-striped">
+<div ng-hide="status.pools" class="alert alert-danger">No pools loaded</div>
+<table ng-show="status.pools" id="statusPools" class="table table-right table-hover table-striped">
 	<thead> 
 		<tr>
 			<th>URL</th>
@@ -12,37 +13,37 @@
 			<th><div title="Accepted">Acc</div></th>
 			<th><div title="Rejected">Rej</div></th>
 			<th><div title="Discarded">Disc</div></th>
-			<th><div title="Last Share Time">Last</div></th>       
-			<th><div title="Difficulty 1 Shares">Diff1</div></th>        
+			<th><div title="Last Share Time">Last</div></th> 
+			<th><div title="Difficulty 1 Shares">Diff1</div></th>
 			<th><div title="Difficulty Accepted">DAcc</div></th>
 			<th><div title="Difficulty Rejected">DRej</div></th>
 			<th><div title="Last Share Difficulty">DLast</div></th>
-			<th><div title="Best Share">Best</div></th>      
+			<th><div title="Best Share">Best</div></th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="p in pools">
+		<tr ng-repeat="p in status.pools">
 			<td ng-bind="p.URL|shortUrl" class='text-left'></td>
 			<td ng-bind="p.User" class='text-left ellipsis'></td>
-			<td ng-bind="p.Status" class='text-left' ng-class="{success:p.Status=='Alive',danger:p.Status!='Alive'}"></td>        
+			<td ng-bind="p.Status" class='text-left' ng-class="{success:p.Status=='Alive',danger:p.Status!='Alive'}"></td>
 			<td ng-bind="p.Priority"></td>
 			<td ng-bind="p.Getworks"></td>
 			<td ng-bind="p.Accepted"></td>
 			<td ng-bind="p.Rejected"></td>
 			<td ng-bind="p.Discarded"></td>
 			<td ng-bind="1000*p.LastShareTime|date:'HH:mm:ss'"></td>
-			<td ng-bind="p.Diff1Shares"></td>       
+			<td ng-bind="p.Diff1Shares"></td> 
 			<td ng-bind-template="{{p.DifficultyAccepted}}&nbsp;[{{100*p.DifficultyAccepted/p.Diff1Shares|number:2}}%]"></td>
 			<td ng-bind-template="{{p.DifficultyRejected}}&nbsp;[{{100*p.DifficultyRejected/p.Diff1Shares|number:2}}%]"></td>
 			<td ng-bind="p.LastShareDifficulty"></td>
-			<td ng-bind="p.BestShare"></td>     
+			<td ng-bind="p.BestShare"></td> 
 		</tr>
 	</tbody>
 </table>
 
 <h3>Devices</h3>
-<div ng-hide="devs" class='alert alert-danger'>No devices running</div>
-<table ng-show="devs" id="stats" class="tablesorter table table-hover table-striped">
+<div ng-hide="status.devs" class='alert alert-danger'>No devices running</div>
+<table ng-show="status.devs" id="statusDevs" class="table table-right table-hover table-striped">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -58,7 +59,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="d in devs">
+		<tr ng-repeat="d in status.devs">
 			<td ng-bind="d.Name" class='text-left' ng-class="{danger:d.Rejected/(d.TotalShares) > .05 || d.HardwareErrors/(d.TotalShares) > .1}"></td>
 			<td ng-bind="d.ID"></td>
 			<td ng-bind-template="{{d.Temperature}} °C"></td>
@@ -72,15 +73,15 @@
 		</tr>
 	</tbody>
 	<tfoot>
-  	<tr>
-		  <th colspan="3" class='text-left'>Totals</th>
-		  <th ng-bind="dtot.MHS5s|mhs|hashps"></th>
-		  <th ng-bind="dtot.MHSav|mhs|hashps"></th>
-		  <th ng-bind="dtot.Accepted"></th>
-			<th ng-bind-template="{{dtot.Rejected}}&nbsp;[{{100*dtot.Rejected/(dtot.TotalShares)|number:2}}%]"></td>
-			<th ng-bind-template="{{dtot.HardwareErrors}}&nbsp;[{{100*dtot.HardwareErrors/(dtot.TotalShares)|number:2}}%]"></td>
-		  <th ng-bind="dtot.Utility">" . $ . "</th>
-		  <th></th>
-	  </tr>
-  </tfoot>
+		<tr>
+			<th colspan="3" class='text-left'>Totals</th>
+			<th ng-bind="status.dtot.MHS5s|mhs|hashps"></th>
+			<th ng-bind="status.dtot.MHSav|mhs|hashps"></th>
+			<th ng-bind="status.dtot.Accepted"></th>
+			<th ng-bind-template="{{status.dtot.Rejected}}&nbsp;[{{100*status.dtot.Rejected/(status.dtot.TotalShares)|number:2}}%]"></th>
+			<th ng-bind-template="{{status.dtot.HardwareErrors}}&nbsp;[{{100*status.dtot.HardwareErrors/(status.dtot.TotalShares)|number:2}}%]"></th>
+			<th ng-bind="status.dtot.Utility">" . $ . "</th>
+			<th></th>
+		</tr>
+	</tfoot>
 </table>

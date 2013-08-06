@@ -11,95 +11,80 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/bootstrap-minepeon.css" rel="stylesheet">
 </head>
-<body>
+<body ng-controller="CtrlMain">
 	<div class="navbar navbar-static-top">
 		<div class="container">
-			<ul class="nav navbar-nav">
-				<li menu-active><a ng-href="#/status">Status</a></li>
-				<li menu-active><a ng-href="#/settings">Settings</a></li>
-				<li menu-active><a ng-href="#/backup">Backup</a></li>
-				<li menu-active><a ng-href="#/restore">Restore</a></li>
-				<li><a href="miner.php">miner.php</a></li>
-				<li><a href="/"><i class="icon-btc"></i>ack to static</a></li>
-			</ul>
+			<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href="./" class="navbar-brand">MinePeon</a>
+			<div class="nav-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li menu-active><a ng-href="#/status">Status</a></li>
+					<li menu-active><a ng-href="#/settings">Settings</a></li>
+					<li menu-active><a ng-href="#/backup">Backup</a></li>
+					<li menu-active><a ng-href="#/restore">Restore</a></li>
+					<li><a href="miner.php">miner.php</a></li>
+					<li><a href="/"><i class="icon-btc"></i>ack to static</a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 	<div class="statusbar peon-trigger" ng-controller="CtrlStatusBar">
 		<div class="container">
-			<span class="btn" status-item="dtot.MHS5s" good="settings.miningExpHash" bad="settings.miningExpHash*.8" title="cgMiner > Summary > MhsAv">
-				<span ng-bind="dtot.MHS5s|mhs"></span>
+			<span class="btn btn-danger" ng-show="status.minerDown" title="Hopefully it's restarting">
+				cgMiner is DOWN
+			</span>
+			<span class="btn" status-item="status.dtot.MHS5s" good="settings.miningExpHash" bad="settings.miningExpHash*.8" title="cgMiner > Summary > MhsAv">
+				<span ng-bind="status.dtot.MHS5s|mhs"></span>
 				<small> h/s</small>
 			</span>
-			<span class="btn" status-item="dtot.devices" good="settings.miningExpDev" bad="settings.miningExpDev-2" title="Running devices">
-				<span ng-bind-template="{{dtot.devices}} / {{settings.miningExpDev}}"></span>
+			<span class="btn" status-item="status.dtot.devices" good="settings.miningExpDev" bad="settings.miningExpDev-2" title="Running devices">
+				<span ng-bind-template="{{status.dtot.devices}} / {{settings.miningExpDev}}"></span>
 				<small> devs</small>
 			</span>
-			<span class="btn" status-item="load" good="0.3" bad="1" title="PHP CPU load 1 minute average">
+			<span class="btn" status-item="status.load" good="0.3" bad="1" title="PHP CPU load 1 minute average">
 				<small>load </small>
-				<span ng-bind="load*100|number:1"></span>
+				<span ng-bind="status.load*100|number:1"></span>
 				<small> %</small>
 			</span>
-			<span class="btn" status-item="temp" good="35" bad="50" title="Raspberry Pi temperature">
+			<span class="btn" status-item="status.temp" good="35" bad="50" title="Raspberry Pi temperature">
 				<small>temp </small>
-				<span ng-bind="temp"></span>
+				<span ng-bind="status.temp"></span>
 				<small> °C</small>
 			</span>
 			<div class="peon-settings">
 				<div class="peon-more">
 					<div class="btn-group">
-						<button class="btn btn-default" ng-click="setRate(-1)"    ng-class="{disabled:rate>600000}" title="Stop refreshing">Stop</button>
-						<button class="btn btn-default" ng-click="setRate(1000)"  ng-class="{disabled:rate==1000}" title="Refresh data every second">1</button>
-						<button class="btn btn-default" ng-click="setRate(5000)"  ng-class="{disabled:rate==5000}" title="Refresh data every 5 seconds">5</button>
-						<button class="btn btn-default" ng-click="setRate(30000)" ng-class="{disabled:rate==30000}" title="Refresh data every 30 seconds">30</button>
+						<button class="btn btn-default" ng-click="setRate(-1)"    ng-class="{disabled:statusRate>600000}" title="Stop refreshing">Stop</button>
+						<button class="btn btn-default" ng-click="setRate(1000)"  ng-class="{disabled:statusRate==1000}" title="Refresh data every second">1</button>
+						<button class="btn btn-default" ng-click="setRate(5000)"  ng-class="{disabled:statusRate==5000}" title="Refresh data every 5 seconds">5</button>
+						<button class="btn btn-default" ng-click="setRate(30000)" ng-class="{disabled:statusRate==30000}" title="Refresh data every 30 seconds">30</button>
 					</div>
 				</div>
 				<div class="peon-less">
-					<button class="btn btn-peon" ng-click="tick(true)" title="Refresh just once"><i class="icon-refresh"></i></button>
-					<button class="btn btn-peon" ng-click="editSettings=!editSettings" title="Statusbar settings"><i class="icon-wrench"></i></button>
+					<button class="btn btn-peon" ng-click="tick(1,1)" title="Refresh just once"><i class="icon-refresh"></i></button>
 					<div class="btn-group" ng-show="saveEnable()">
-						<button class="btn btn-success" ng-click="sync('all',settings)" title="Save changes">Save</button>
+						<button class="btn btn-success" ng-click="sync('settings',settings,1)" title="Save changes">Save</button>
 						<button class="btn btn-danger"  ng-click="back()" title="Discard changes">Discard</button>
 					</div>
 					<button class="btn btn-danger" ng-click="settings.devEnable=false" ng-show="settings.devEnable" title="Quit developer mode">Quit devmode</button>
 				</div>
 			</div>
-		  <form class="form-horizontal" ng-show="editSettings">
-		    <fieldset>
-		      <div class="form-group">
-		        <label for="statusExpDev" class="control-label col-lg-2">Expected Devices</label>
-		        <div class="col-lg-4">
-		          <input type="number" id="statusExpDev" ng-model="settings.miningExpDev" class="form-control">
-		          <p class="help-block" ng-show="settings.helpEnable">
-		            If the count of active devices falls below this value, an alert will be sent.
-		          </p>
-		        </div>
-		        <label for="statusExpHash" class="control-label col-lg-2">Expected Hashrate</label>
-		        <div class="col-lg-4">
-		          <div class="input-group">
-		            <input type="number" id="statusExpHash" ng-model="settings.miningExpHash" class="form-control">
-		            <span class="input-group-addon">MH/s</span>
-		          </div>
-		          <p class="help-block" ng-show="settings.helpEnable">
-		            If the hashrate falls below half this value for more than a minute, an alert will be sent.<br/>
-		            After 3 minutes cgminer will be restarted.
-		          </p>
-		        </div>
-		      </div>
-		    </fieldset>
-		  </form>
-			</div>
 		</div>
 	</div>
 
 	<div class="container">
-		<div class="peon-alerts">
+		<div class="peon-alerts" ng-controller="CtrlAlert" ng-click="alertShift()">
 			<div ng-repeat="alert in alerts" class="alert-{{alert.type}} {{$index==0?'alert-top':''}}">{{alert.text}}</div>
 		</div>
 
 		<div ng-view>
-			<p>
+			<h1 class="text-center">
 				Loading angular.js the first time might take some seconds... Hang tight!
-			</p>
+			</h1>
 		</div>
 	</div>
 	<script src="js/jquery.min.js"></script>
@@ -112,6 +97,5 @@
 	<script src="js/ng/filters.js"></script>
 	<script src="js/ng/directives.js"></script>
 	<script src="js/ng/moment.min.js"></script>
-	<script src="js/jquery.tablesorter.js"></script>
 </body>
 </html>
