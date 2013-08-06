@@ -13,7 +13,9 @@ angular.module('Peon.directives', [])
 
 		function update(){
 			var x=2*(i-g)/(b-g);
-			element.css('background',(b==g)?'#666':'rgb('+Math.round(Math.min(x, 1)*200)+','+Math.round((2 - Math.max(x, 1)) * 150)+',0)');
+			x= x<0 ?0:x;
+			x= x>2 ?2:x;
+			element.css('background',(b==g)?'#666':'rgb('+Math.round(Math.min(x, 1)*(217-92)+92)+','+Math.round((2 - Math.max(x, 1)) * (184-83)+83)+',85)');
 			element.css('color','#fff');
 		}
 

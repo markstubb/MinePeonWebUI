@@ -43,17 +43,15 @@ blockquote cite:before {
   content: "\2014 \2009";
 }
 
-/**/
-td,tfoot th{
+/* Status tables */
+.table-right td,.table-right tfoot th{
   text-align: right
 }
-
+.table-right td.text-left,.table-right tfoot th.text-left{
+  text-align: left
+}
 .table>tbody>tr>td {
   border: 1px solid #ddd;
-}
-.table>thead>tr>th{
-  border-bottom: 1px solid #ddd;
-  border-width:1px 1px 0 1px;
 }
 
 /* Advanced / Mute unselected filenames */
@@ -87,6 +85,14 @@ td,tfoot th{
   margin-top: 20px;
 }
 
+/* Advanced / Settings */
+input:required:invalid{
+  border-color: rgb(233, 50, 45);
+  box-shadow: 0px 0px 6px rgb(248, 185, 183);
+  color: rgb(185, 74, 72);
+  border-color: rgb(238, 95, 91);
+}
+
 /* Advanced / Settings component */
 .peon-settings{
   float:right;
@@ -117,6 +123,11 @@ td,tfoot th{
   z-index: 2;
   background: #d5d5d5;
   border-radius: 0 0 4px 4px;
+  padding-left: 50%;
+  height:0;
+  max-height:0;
+  padding-top: 1px;
+  margin-top: -1px;
 }
 .peon-alerts > div{
   padding: 0 1em;
