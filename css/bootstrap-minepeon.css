@@ -47,6 +47,9 @@ blockquote cite:before {
 .table-right td,.table-right tfoot th{
   text-align: right
 }
+.table-right td.text-left,.table-right tfoot th.text-left{
+  text-align: left
+}
 .table>tbody>tr>td {
   border: 1px solid #ddd;
 }
