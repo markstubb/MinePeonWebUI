@@ -32,7 +32,6 @@ if (!empty($_REQUEST['all'])) {
 	file_put_contents('/opt/minepeon/etc/minepeon.conf', json_encode($r['data'], JSON_PRETTY_PRINT));
 	$r['info'][]=array("type" => "success", "text" => "Settings saved.");
 }
-$r['time'] = time();
 
 // Sync timezone
 if (!empty($_REQUEST['timezone'])) {
@@ -43,6 +42,7 @@ if (!empty($_REQUEST['timezone'])) {
 	$r['info'][]=array("type" => "success", "text" => "Timezone updated");
 }
 
+$r['data']['time'] = time();
 
 echo json_encode($r);
 ?>
