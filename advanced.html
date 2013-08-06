@@ -26,6 +26,9 @@
 	</div>
 	<div class="statusbar peon-trigger" ng-controller="CtrlStatusBar">
 		<div class="container">
+			<span class="btn btn-danger" ng-hide="cgminer" title="cgMiner is DOWN">
+				Hopefully it's restarting
+			</span>
 			<span class="btn" status-item="dtot.MHS5s" good="settings.miningExpHash" bad="settings.miningExpHash*.8" title="cgMiner > Summary > MhsAv">
 				<span ng-bind="dtot.MHS5s|mhs"></span>
 				<small> h/s</small>
@@ -57,7 +60,7 @@
 					<button class="btn btn-peon" ng-click="tick(true)" title="Refresh just once"><i class="icon-refresh"></i></button>
 					<button class="btn btn-peon" ng-click="editSettings=!editSettings" title="Statusbar settings"><i class="icon-wrench"></i></button>
 					<div class="btn-group" ng-show="saveEnable()">
-						<button class="btn btn-success" ng-click="sync('all',settings)" title="Save changes">Save</button>
+						<button class="btn btn-success" ng-click="sync('settings',settings)" title="Save changes">Save</button>
 						<button class="btn btn-danger"  ng-click="back()" title="Discard changes">Discard</button>
 					</div>
 					<button class="btn btn-danger" ng-click="settings.devEnable=false" ng-show="settings.devEnable" title="Quit developer mode">Quit devmode</button>
@@ -92,8 +95,8 @@
 	</div>
 
 	<div class="container">
-		<div class="peon-alerts">
-			<div ng-repeat="alert in alerts" class="alert-{{alert.type}} {{$index==0?'alert-top':''}}">{{alert.text}}</div>
+		<div class="peon-alerts" ng-click="alertShift()">
+			<div ng-repeat="alert in alerts" class="alert-{{alert.type}} {{$index==0?'alert-top':''}} {{$index==1?'alert-next':''}}">{{alert.text}}</div>
 		</div>
 
 		<div ng-view>

@@ -6,8 +6,10 @@ angular.module('Peon.controllers', [])
 // Statusbar with realtime updates
 .controller('CtrlStatusBar', function($scope,$rootScope,$http,$timeout) {
   var prom=[], minRate = 500, req='all=1', oldSettings={}, alertProm;
-  $rootScope.settings={};
   $rootScope.alerts=[{type:'success',text:'Welcome back!'}];
+  $rootScope.cgminer=true;
+  $rootScope.settings={};
+  $rootScope.pools={};
   $scope.rate = 30000; // Default refresh rate
 
   // Enable tooltips
@@ -29,12 +31,15 @@ angular.module('Peon.controllers', [])
   $scope.tick = function(once) {
     if($scope.settings.devEnable)req+='&dev=1';  
     $http.get('f_status.php?'+req).success(function(d){
-      angular.forEach(d, function(v,k) {$rootScope[k]=v;});      
-      if(!once){
+      angular.forEach(d, function(v,k) {$rootScope[k]=v;});
+      if(!$rootScope.cgminer){
+        prom.push($timeout($scope.tick, 1000));
+      }
+      else if(!once){
         prom.push($timeout($scope.tick, $scope.rate));
       }
       req='all=1'; //Set this to '' to disable temp checks 
-    })
+    });
   }
   $scope.tick();
 
@@ -44,20 +49,47 @@ angular.module('Peon.controllers', [])
   };
   // Sync settings
   // Note: not possible to remove settings!
-  $rootScope.sync = function(action,data) {
-    data = data || "lol";
-    $http.get('f_settings.php?'+(action||"load")+'='+angular.toJson(data)).success(function(d){
-      angular.forEach(d['info'], function(v,k) {$rootScope.alerts.push(v);});// Add to existing
-      angular.forEach(d['data'], function(v,k) {$rootScope.settings[k]=v;});// Overwrite existing
-      angular.copy($rootScope.settings,oldSettings);
+  $rootScope.sync = function(action,data,alert) {
+    action = action || 'settings';
+    data = data || 'load';
+    $http.get('f_settings.php?'+action+'='+angular.toJson(data)).success(function(d){
+      if(alert){
+        angular.forEach(d['info'], function(v,k) {$rootScope.alerts.push(v);});// Add to existing
+      }
+      if(action=='settings'){
+        angular.copy(d['data'],$rootScope.settings);
+        angular.copy(d['data'],oldSettings);
+      }
+      else if(action=='pools'){
+        $rootScope.pools=d['data']['pools'];
+        $scope.tick();
+      }
+      else if(action=='timezone'){
+        $rootScope.settings.time=d.data.time;
+        oldSettings.time=d.data.time;
+      }
     });
   };
+  // Discard settings
   $scope.back = function() {
     angular.copy(oldSettings,$rootScope.settings);
   };
+  // Sync settings with delay
+  $rootScope.syncDelay = function(ms,action,data,alert) {
+    action = action || 'settings';
+    data = data || 'load';
+    ms = ms || 3000;
+    var dothis = function(){
+      $rootScope.sync(action,data,alert);
+    }
+    $timeout(dothis, ms);
+  };
 
   // Load current settings
-  $scope.sync();
+  $rootScope.syncDelay(200);
+
+  // Load current pools data
+  $rootScope.syncDelay(500,'pools');
 
   // Make alerts disappear after 10 seconds
   $rootScope.$watch('alerts', function(b,a) {
@@ -66,17 +98,17 @@ angular.module('Peon.controllers', [])
     }
     if(alertProm){return;}
     if(b.length>1){//Added
-      alertProm=$timeout($scope.alertDismiss, 3000);
+      alertProm=$timeout($rootScope.alertDismiss, 2000);
     }
     else if(b.length==1){//Added
-      alertProm=$timeout($scope.alertDismiss, 6000);
+      alertProm=$timeout($rootScope.alertDismiss, 10000);
     }
   }, true);
-  $scope.alertDismiss = function() {
+  $rootScope.alertDismiss = function() {
     $('.alert-top').addClass('alert-dismiss');
-    $timeout($scope.alertShift, 1000);
+    $timeout($rootScope.alertShift, 1000);
   };
-  $scope.alertShift = function() {
+  $rootScope.alertShift = function() {
     $rootScope.alerts.shift();
     alertProm=false;
   };
@@ -90,7 +122,22 @@ angular.module('Peon.controllers', [])
 })
 
 
-.controller('CtrlSettings', function($scope,$rootScope,$http) {
+.controller('CtrlSettings', function($scope,$rootScope) {
+  $scope.poolAdd = function() {
+    $rootScope.pools.push({});
+  };
+  $scope.poolRemove = function(index) {
+    $rootScope.pools.splice(index,1);
+    $scope.poolForm.$setDirty()
+  };
+  $scope.poolSave = function() {
+    $rootScope.sync('pools',$rootScope.pools,true);
+    $scope.poolForm.$setPristine();
+  };
+  $scope.poolBack = function() {
+    $rootScope.sync('pools');
+    $scope.poolForm.$setPristine();
+  };
 })
 
 
