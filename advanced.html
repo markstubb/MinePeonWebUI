@@ -59,7 +59,7 @@
 				<div class="peon-less">
 					<button class="btn btn-peon" ng-click="tick(1,1)" title="Refresh just once"><i class="icon-refresh"></i></button>
 					<div class="btn-group" ng-show="saveEnable()">
-						<button class="btn btn-success" ng-click="sync('settings',settings)" title="Save changes">Save</button>
+						<button class="btn btn-success" ng-click="sync('settings',settings,1)" title="Save changes">Save</button>
 						<button class="btn btn-danger"  ng-click="back()" title="Discard changes">Discard</button>
 					</div>
 					<button class="btn btn-danger" ng-click="settings.devEnable=false" ng-show="settings.devEnable" title="Quit developer mode">Quit devmode</button>
