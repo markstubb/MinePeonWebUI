@@ -23,7 +23,7 @@ angular.module('Peon.filters', [])
 	}
 })
 .filter('hashps', function() {
-	return function(hs) {return hs+"hash/s";}
+	return function(hs) {return hs+"H/s";}
 })
 .filter('fromStamp', function() {
 	return function(timestamp) {

@@ -1,5 +1,5 @@
 <?php
-if (!isset($_SERVER['HTTPS'])) {
+if (!isset($_SERVER['HTTPS']) and php_sapi_name() <> 'cli') {
 	header('Location: https://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI']);
 }
 
