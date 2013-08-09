@@ -55,8 +55,8 @@ angular.module('Peon.controllers', [])
   };
 
   // Show save button? Should be done with ngform.$dirty
-  $scope.saveEnable = function() {
-    return !angular.equals( $scope.settings,oldSettings,true);
+  $scope.saveHide = function() {
+    return angular.equals( $scope.settings,oldSettings,true);
   };
   // Discard settings
   $scope.back = function() {
@@ -79,7 +79,9 @@ angular.module('Peon.controllers', [])
   $scope.tick(0,1);
 
   // Load current settings
-  $scope.syncDelay(500);
+  $scope.sync();
+  $scope.syncDelay(1000,'pools');
+  $scope.syncDelay(1500,'options');
 
   // Set rate and update status
   $scope.setRate = function(value) {
