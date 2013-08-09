@@ -54,7 +54,7 @@ angular.module('Peon.controllers', [])
     $timeout(dothis, ms);
   };
 
-  // show save button?
+  // Show save button? Should be done with ngform.$dirty
   $scope.saveEnable = function() {
     return !angular.equals( $scope.settings,oldSettings,true);
   };
@@ -80,6 +80,13 @@ angular.module('Peon.controllers', [])
 
   // Load current settings
   $scope.syncDelay(500);
+
+  // Set rate and update status
+  $scope.setRate = function(value) {
+    angular.forEach($scope.statusProm, function(p) {$timeout.cancel(p)});// Clean up timeouts
+    $scope.statusRate=value>=500?value:600001;
+    $scope.tick(0,1);
+  };
 })
 
 
@@ -88,20 +95,20 @@ angular.module('Peon.controllers', [])
   var alertProm;
   // Make alerts disappear after 10 seconds
   $scope.$watch('alerts', function(b,a) {
-    if(b.length>5){
-      $scope.alerts.shift();
+    if(alertProm){}
+    else if(b.length>3){
+      alertProm=$timeout($scope.alertDismiss, 1);
     }
-    if(alertProm){return;}
-    else if(b.length>1){//Added
+    else if(b.length>1){
       alertProm=$timeout($scope.alertDismiss, 1000);
     }
-    else if(b.length==1){//Added
+    else if(b.length==1){
       alertProm=$timeout($scope.alertDismiss, 3000);
     }
   }, true);
   $scope.alertDismiss = function() {
+    alertProm=$timeout($scope.alertShift, 1010);
     $('.alert-top').addClass('alert-dismiss');
-    $timeout($scope.alertShift, 1000);
   };
   $scope.alertShift = function() {
     $scope.alerts.shift();
@@ -111,26 +118,43 @@ angular.module('Peon.controllers', [])
 
 
 // Statusbar with realtime updates
-.controller('CtrlStatusBar', function($scope,$http,$timeout) {
-  var minRate = 500;
-
+.controller('CtrlStatusBar', function($scope,$timeout) {
   // Enable tooltips
   $('span.btn').tooltip({placement:'bottom'});
   $('button').tooltip({container: 'body'});
 
-  // Set rate and update status
-  $scope.setRate = function(value) {
-    angular.forEach($scope.statusProm, function(p) {$timeout.cancel(p)});// Clean up timeouts
-    $scope.statusRate=value>=minRate?value:600001;
-    $scope.tick(1,1);
+  // timer last update
+  $scope.counter=0;
+  $scope.countProm = null;
+  $scope.countLast = Date.now();
+
+  var count = function () {
+    $scope.countProm = $timeout(count, 1000);
+    $scope.counter++;
   };
+
+  $scope.$watch('status.time', function() {
+    $scope.counter=0;
+    $scope.countLast = Date.now();
+    if($scope.countProm){
+      $timeout.cancel($scope.countProm);
+    }
+    count();
+  }, true);
 })
 
 
 .controller('CtrlStatus', function($scope) {
   // Enable tooltips
   $('th div').tooltip();
-  $('button').tooltip();
+})
+
+
+.controller('CtrlMiner', function($scope,$http) {
+  $scope.miner={test:'haha'};
+  $http.get('f_settings.php?miner=false').success(function(d){
+    $scope.miner = angular.fromJson(d.data);
+  });
 })
 
 
@@ -149,7 +173,7 @@ angular.module('Peon.controllers', [])
     $scope.poolForm.$setDirty()
   };
   $scope.poolSave = function() {
-    $scope.sync('pools',$scope.pools,true);
+    $scope.sync('pools',$scope.pools,1);
     $scope.poolForm.$setPristine();
   };
   $scope.poolBack = function() {
@@ -159,96 +183,71 @@ angular.module('Peon.controllers', [])
 })
 
 
-.controller('CtrlRestore', function($scope,$http) {
-  $scope.thisFolder = "/opt/minepeon/";
-  $scope.backupFolder = "/opt/minepeon/etc/backup/";
-
-  $scope.folders={};
-  $scope.folderdata = { index: 0 };
-
-  $http.get('f_restore_list.php').success(function(d){
-    if(d.success){
-      $scope.folders=d.folders;
-    }
-  });
-
-  $scope.restore = function() {
-  };
-})
-
-
 .controller('CtrlBackup', function($scope,$http) {
   $scope.thisFolder = "/opt/minepeon/";
   $scope.backupFolder = "/opt/minepeon/etc/backup/";
   $scope.backupName = GetDateTime()+"/";
-  $scope.files = [
-  {selected:true,name:"etc/minepeon.conf"},
+  $scope.backups = [];
+  $scope.restoring = 0;
+  $scope.items = [
+  {selected:true,name:"etc/miner.user.conf"},
   {selected:true,name:"etc/miner.conf"},
-  {selected:true,name:"etc/miner.conf.donate"},
-  {selected:true,name:"etc/miner.conf.tmp"},
   {selected:true,name:"etc/uipassword"},
-  {selected:true,name:"etc/version"}
-  ];
-  $scope.folders = [
+  {selected:true,name:"etc/version"},
+  {selected:true,name:"etc/minepeon.conf"},
   {selected:true,name:"var/rrd"}
   ];
-
-  $scope.addFile = function() {
-    $scope.files.push({selected:true,name:$scope.newFile});
-    $scope.newFile = '';
+  
+  $scope.addItem = function() {
+    $scope.items.push({selected:true,name:$scope.newItem});
+    $scope.newItem = '';
   };
-  $scope.selFile = function() {
+  $scope.selItem = function() {
     var count = 0;
-    angular.forEach($scope.files, function(file) {
-      count += file.selected ? 1 : 0;
+    angular.forEach($scope.items, function(item) {
+      count += item.selected ? 1 : 0;
     });
     return count;
   };
-  $scope.addFolder = function() {
-    $scope.folders.push({selected:true,name:$scope.newFolder});
-    $scope.newFolder = '';
-  };
-  $scope.selFolder = function() {
-    var count = 0;
-    angular.forEach($scope.folders, function(folder) {
-      count += folder.selected ? 1 : 0;
-    });
-    return count;
-  };
+  
 
   $scope.backup = function() {
     var count = 0;
 
     // These get requests need some timeout I think, but it also works like this.
-    angular.forEach($scope.files, function(f,i) {
+    angular.forEach($scope.items, function(f,i) {
       if(f.selected){
         $http.get('f_copy.php?src='+$scope.thisFolder+f.name+'&dst='+$scope.backupFolder+$scope.backupName+f.name).success(function(d){
           console.log(d.success);
           if(d.success){
-            $scope.files[i].bak=true;
-            $scope.files[i].selected=false;
+            $scope.items[i].bak=true;
+            $scope.items[i].selected=false;
           }
           else{
-            $scope.files[i].fail=true;
-          }
-        });
-      }
-    });
-    angular.forEach($scope.folders, function(f,i) {
-      if(f.selected){
-        $http.get('f_copy.php?src='+$scope.thisFolder+f.name+'&dst='+$scope.backupFolder+$scope.backupName+f.name).success(function(d){
-          console.log(d.success);
-          if(d.success){
-            $scope.folders[i].bak=true;
-            $scope.folders[i].selected=false;
-          }
-          else{
-            $scope.files[i].fail=true;
+            $scope.items[i].fail=true;
           }
         });
       }
     });
   };
+
+
+  $scope.choose = function(i) {
+    $scope.restoring=i;
+  };
+
+  $scope.restore = function() {
+    console.log($scope.restoring)
+  };
+
+  $scope.reload = function() {
+    $http.get('f_backup.php').success(function(d){
+      if(d.data){
+        $scope.backups=d.data;
+      }
+    });
+  };
+  $scope.reload();
 });
 
 

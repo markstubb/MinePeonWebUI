@@ -44,6 +44,12 @@ blockquote cite:before {
 }
 
 /* Status tables */
+td,th{
+  white-space: nowrap;
+}
+#stats td,#stats th,#pools td,#pools th{
+  text-align: center
+}
 .table-right td,.table-right tfoot th{
   text-align: right
 }
@@ -83,6 +89,15 @@ blockquote cite:before {
 }
 .statusbar form{
   margin-top: 20px;
+}
+
+/* Advanced / Miner (is part of next bootstrap) */
+.form-control-static {
+  padding-top: 8px;
+  margin-bottom: 0;
+} 
+.minerform .form-group{
+  margin-bottom: 5px;
 }
 
 /* Advanced / Settings */
@@ -137,14 +152,17 @@ input:required:invalid{
   border-radius: 0 0 4px 4px;
 }
 .peon-alerts .alert-top {
-  -webkit-transition: margin 1s;
-     -moz-transition: margin 1s;
-      -ms-transition: margin 1s;
-       -o-transition: margin 1s;
-          transition: margin 1s;
+  position: relative;
+  top:0;
+  -webkit-transition: margin 1s,top 1s;
+     -moz-transition: margin 1s,top 1s;
+      -ms-transition: margin 1s,top 1s;
+       -o-transition: margin 1s,top 1s;
+          transition: margin 1s,top 1s;
 }
 .peon-alerts .alert-dismiss {
-  margin-top: -3em!important
+  top:-3em;
+  margin-bottom: -3em!important
 }
 
 /* Index / Shorten wide values in tables and show them on hover */
@@ -161,7 +179,6 @@ input:required:invalid{
   width:auto;
   background-color: #fff!important;
 }
-
 
 /* Tablesorter */
 table.tablesorter thead th{

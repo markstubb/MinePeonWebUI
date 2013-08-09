@@ -29,9 +29,6 @@ $pools=cgminer('pools');
 
 if($devs!==false){
   $r['status']['devs'] = $devs['DEVS'];
-  if(is_null($devs['DEVS'])){
-    $r['info'][] = array("type" => "danger", "text" => "cgminer detects no devices");;
-  }
 }
 if($pools!==false){
   $r['status']['pools'] = $pools['POOLS'];
