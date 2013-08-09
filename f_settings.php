@@ -1,6 +1,6 @@
 <?php
 /*
-f_settings syncs settings and always returns new state
+f_settings syncs settings in different files and always returns new state
 returns settings and logs last settings change in ['time']
 */
 header('Content-type: application/json');
@@ -36,6 +36,8 @@ elseif (!empty($_REQUEST['settings'])) {
 	else{
 		$r['info'][]=array('type' => 'success', 'text' => 'Settings loaded');
 	}
+
+	$r['data']['time'] = time();
 }
 
 // Manage pools
@@ -50,7 +52,7 @@ elseif (!empty($_REQUEST['pools'])) {
 		// Write back to file
 		file_put_contents('/opt/minepeon/etc/'.$minerUserConfig, json_encode($r['data'], JSON_PRETTY_PRINT));
 		$r['info'][]=array('type' => 'success', 'text' => 'Pools config saved');
-		minerRestart();
+		$r+=minerRestart();
 	}
 	// Load current settings
 	else{
@@ -59,15 +61,20 @@ elseif (!empty($_REQUEST['pools'])) {
 }
 
 // Manage miner.user.conf
-elseif (!empty($_REQUEST['miner'])) {
-	$newdata = json_decode($_REQUEST['pools'], true);
+elseif (!empty($_REQUEST['options'])) {
+	$newdatatemp = json_decode($_REQUEST['options'], true);
+
+	// Angular => cgminer (objects => strings)
+	foreach ($newdatatemp as $value) {
+		$newdata[$value['key']]=$value['value'];
+	}
 
 	// Overwrite current with new config
 	if(is_array($newdata)){
 		file_put_contents('/opt/minepeon/etc/'.$minerUserConfig, json_encode($newdata, JSON_PRETTY_PRINT));
 		$r['data']=$newdata;
 		$r['info'][]=array('type' => 'success', 'text' => 'Miner config saved');
-		minerRestart();
+		$r+=minerRestart();
 	}
 	// Load current settings
 	else{
@@ -81,6 +88,13 @@ elseif (!empty($_REQUEST['miner'])) {
 			$r['info'][]=array('type' => 'danger', 'text' => 'Failed to load miner config');
 		}
 	}
+
+	// cgminer => Angular (strings => objects)
+	$temp=$r['data']; unset($r['data']); $i=0;
+	foreach ($temp as $key => $value) {
+		$r['data'][$i]['key']=$key;
+		$r['data'][$i++]['value']=$value;
+	}
 }
 
 // Set system timezone to what is stored in settings 
@@ -92,23 +106,22 @@ elseif (!empty($_REQUEST['timezone'])) {
 	$r['info'][]=array('type' => 'danger', 'text' => 'Timezone updated');
 }
 
-$r['data']['time'] = time();
-
 echo json_encode($r);
 
 function minerRestart(){
-		// Setup socket
+	// Setup socket
 	$client = stream_socket_client('tcp://127.0.0.1:4028', $errno, $errorMessage);
 
-		// Socket failed
+	// Socket failed
 	if ($client === false) {
 		$r['info'][]=array('type' => 'danger', 'text' => 'Could not restart cgminer because: '.$errno.' '.$errorMessage);
 	}
-		// Socket success
+	// Socket success
 	else{
 		fwrite($client, json_encode(array('command'=>'restart')));
 		fclose($client);
 		$r['info'][]=array('type' => 'info', 'text' => 'Cgminer restarting');
 	}
+	return $r;
 }
 ?>

@@ -91,6 +91,15 @@ td,th{
   margin-top: 20px;
 }
 
+/* Advanced / Miner (is part of next bootstrap) */
+.form-control-static {
+  padding-top: 8px;
+  margin-bottom: 0;
+} 
+.minerform .form-group{
+  margin-bottom: 5px;
+}
+
 /* Advanced / Settings */
 input:required:invalid{
   border-color: rgb(233, 50, 45);
@@ -170,7 +179,6 @@ input:required:invalid{
   width:auto;
   background-color: #fff!important;
 }
-
 
 /* Tablesorter */
 table.tablesorter thead th{

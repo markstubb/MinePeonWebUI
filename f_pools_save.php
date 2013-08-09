@@ -45,14 +45,20 @@ $written = 0;
 // Recode into JSON and save
 // Never save if no pools given
 if (!empty($dataPools)) {
-	// Read current config
-	$data = json_decode(file_get_contents("/opt/minepeon/etc/miner.conf", true), true);
+	// Read current config, prefer miner.user.conf
+	if(file_exists("/opt/minepeon/etc/miner.user.conf")){
+		$data = json_decode(file_get_contents("/opt/minepeon/etc/miner.user.conf", true), true);
+	}
+	else{
+		$data = json_decode(file_get_contents("/opt/minepeon/etc/miner.conf", true), true);
+	}
 	// Unset currect
 	unset($data['pools']);
 	// Set new pool data
 	$data['pools']=$dataPools;
 	// Write back to file
 	$written = file_put_contents("/opt/minepeon/etc/miner.conf", json_encode($data, JSON_PRETTY_PRINT));
+	$written = file_put_contents("/opt/minepeon/etc/miner.user.conf", json_encode($data, JSON_PRETTY_PRINT));
 }
 
 echo json_encode(array('success' => true, 'written' => $written, 'pools' => $dataPools));

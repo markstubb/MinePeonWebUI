@@ -27,7 +27,6 @@
 						<li menu-active><a ng-href="#/miner">Miner</a></li>
 						<li menu-active><a ng-href="#/settings">Settings</a></li>
 						<li menu-active><a ng-href="#/backup">Backup</a></li>
-						<li><a href="miner.php">miner.php</a></li>
 						<li><a href="/"><i class="icon-btc"></i>ack to static</a></li>
 					</ul>
 				</div>
@@ -35,7 +34,7 @@
 		</div>
 		<div class="statusbar" ng-controller="CtrlStatusBar">
 			<div class="container">
-				<span class="btn btn-danger" ng-show="status.minerDown" title="Hopefully it's restarting">
+				<span class="btn btn-danger ng-cloak" ng-show="status.minerDown" title="Hopefully it's restarting">
 					cgMiner is DOWN
 				</span>
 				<span class="btn" status-item="status.dtot.MHS5s" good="settings.miningExpHash" bad="settings.miningExpHash*.8" title="cgMiner > Summary > MhsAv">
@@ -68,11 +67,11 @@
 					</div>
 					<div class="peon-less">
 						<button class="btn btn-peon" ng-click="tick(1,1)" title="Refresh just once"><i class="icon-refresh" ng-class="{'icon-spin':counter<3}"></i></button>
-						<div class="btn-group" ng-show="saveEnable()">
+						<div class="btn-group ng-cloak" ng-hide="saveHide()">
 							<button class="btn btn-success" ng-click="sync('settings',settings,1)" title="Save changes">Save</button>
 							<button class="btn btn-danger"  ng-click="back()" title="Discard changes">Discard</button>
 						</div>
-						<button class="btn btn-danger" ng-click="settings.devEnable=false" ng-show="settings.devEnable" title="Quit developer mode">Quit devmode</button>
+						<button class="btn btn-danger ng-cloak" ng-click="settings.devEnable=false" ng-show="settings.devEnable" title="Quit developer mode">Quit devmode</button>
 					</div>
 				</div>
 			</div>
@@ -90,6 +89,19 @@
 			</h1>
 		</div>
 	</div>
+
+	<footer>
+		<div class="container">
+			<hr />
+			<p>
+				<label class="checkbox-inline pull-right">
+	         <input type="checkbox" id="devEnable" ng-model="settings.devEnable"> Enable developer mode
+	      </label>
+				MinePeon, by Neil
+	    </p>
+			<p><a href='http://www.minepeon.com'>MinePeon.com</a> - Follow this project on <a href='https://bitcointalk.org/index.php?topic=137934.10000'>bitcointalk</a>. Contribute on <a href='https://github.com/MineForeman/MinePeon'>Git</a><a href="https://github.com/MineForeman/MinePeonWebUI">Hub</a></p>
+		</div>
+	</footer>
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 

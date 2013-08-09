@@ -1,6 +1,4 @@
-<h2>Settings</h2>
-
-<form name="f" class="form-horizontal">
+<form name="formUser" class="form-horizontal">
   <fieldset>
     <legend>User</legend>
     <div class="form-group">
@@ -17,7 +15,7 @@
     <div class="form-group">
       <label for="userTimezone" class="control-label col-lg-2">Timezone</label>
       <div class="col-lg-10">
-        <input type="text" id="userTimezone" ng-model="settings.userTimezone" class="form-control">
+        <input type="text" id="userTimezone" ng-model="settings.userTimezone" class="form-control" required>
         <p class="help-block">MinePeon thinks it is now {{1000*settings.time|date:'yyyy-MM-dd HH:mm:ss'}} <a href="" ng-click="sync('timezone',1,1)">Update system timezone</a></p>
       </div>
     </div>
@@ -29,7 +27,7 @@
         <p class="help-block" ng-show="settings.helpEnable">An empty password will not be saved.</p>
       </div>
     </div>
-    <div class="form-group" ng-show="f.userPassword.$dirty">
+    <div class="form-group" ng-show="formUser.userPassword.$dirty">
       <div class="col-lg-10 col-offset-2">
         <button type="button" class="btn btn-success" ng-click="sync('pass',userPassword)">Save password</button>
       </div>
@@ -37,41 +35,9 @@
   </fieldset>
 </form>
 
-<div class="form-horizontal">
+<form name="formMining" class="form-horizontal">
   <fieldset>
     <legend>Mining</legend>
-    <form name="poolForm">
-      <div class="form-group">
-        <label for="poolsEdit" class="control-label col-lg-2">Manage pools</label>
-        <div class="col-lg-6 form-inline">
-          <button type="button" ng-bind="poolsEdit?'Hide editor':'Edit pools'" class="btn btn-default" ng-click="poolsEdit=!poolsEdit"></button>
-          <button type="button" ng-show="poolForm.$dirty" class="btn btn-danger" ng-click="poolBack()">Discard changes</button>
-          <button type="button" ng-show="poolForm.$dirty && poolForm.$valid" class="btn btn-success" ng-click="poolSave()">Save pools</button>
-        </div>
-      </div>
-      <div class="row" ng-show="poolsEdit">
-        <label class="col-lg-4 col-offset-2">URL</label>
-        <label class="col-lg-4">User</label>
-        <label class="col-lg-2">Pass</label>
-      </div>
-      <div class="form-group" ng-repeat="pool in pools" ng-show="poolsEdit">
-        <div class="control-label col-lg-2 text-danger"><a href="" ng-click="poolRemove($index)" class="text-danger">Remove</a></div>
-        <div class="col-lg-4">
-          <input type="text" ng-model="pool.url" class="form-control" required>
-        </div>
-        <div class="col-lg-4">
-          <input type="text" ng-model="pool.user" class="form-control" required>
-        </div>
-        <div class="col-lg-2">
-          <input type="text" ng-model="pool.pass" class="form-control" required>
-        </div>
-      </div>
-      <div class="form-group" ng-show="poolsEdit">
-        <div class="col-lg-2 col-offset-2">
-          <button type="button" ng-click="poolAdd()" class="btn btn-success">Add pool</button>
-        </div>
-      </div>
-    </form>
     <div class="form-group">
       <label for="miningRecover" class="control-label col-lg-2">Monitor process</label>
       <div class="col-lg-10">
@@ -94,7 +60,7 @@
     <div class="form-group">
       <label for="miningExpDev" class="control-label col-lg-2">Expected Devices</label>
       <div class="col-lg-10">
-        <input type="number" id="miningExpDev" ng-model="settings.miningExpDev" class="form-control">
+        <input type="number" id="miningExpDev" ng-model="settings.miningExpDev" class="form-control" required>
         <p class="help-block" ng-show="settings.helpEnable">
           If the count of active devices falls below this value, an alert will be sent.
         </p>
@@ -104,7 +70,7 @@
       <label for="miningExpHash" class="control-label col-lg-2">Expected Hashrate</label>
       <div class="col-lg-10">
         <div class="input-group">
-          <input type="number" id="miningExpHash" ng-model="settings.miningExpHash" class="form-control">
+          <input type="number" id="miningExpHash" ng-model="settings.miningExpHash" class="form-control" required>
           <span class="input-group-addon">MH/s</span>
         </div>
         <p class="help-block" ng-show="settings.helpEnable">
@@ -125,7 +91,7 @@
       <div class="col-lg-6">
         <div ng-show="settings.donateEnable">
           <div class="input-group">
-            <input type="number" placeholder="Donation minutes" id="donateAmount" ng-model="settings.donateAmount" class="form-control">
+            <input type="number" placeholder="Donation minutes" id="donateAmount" ng-model="settings.donateAmount" ng-required="settings.donateEnable" class="form-control">
             <span class="input-group-addon">minutes per day</span>
           </div>
         </div>
@@ -137,7 +103,7 @@
           Now look what your support could bring you:
           <ul class="list-unstyled">
             <li>Live Update <span class="label label-success">Almost finished</span></li>
-            <li>SMS/Email Alerts <span class="label label-warning">Work in progress</span></li>
+            <li>SMS/Email Alerts <span class="label label-success">Almost finished</span></li>
             <li>Backup/Restore <span class="label label-warning">Work in progress</span></li>
             <li>TFT Display</li>
             <li>LCD Display</li>
@@ -148,11 +114,17 @@
           </ul>
         </p>
       </div>
+      <div class="col-lg-10 col-offset-2" ng-hide="settings.helpEnable">
+        <p>
+          Daily, at midnight, MinePeon will replace your miner configuration with donation configuration and then restart the miner.<br />
+          When disabled, configuration and the miner will not be touched. Last donation moment: <span class="text-muted">(to come)</span>
+        </p>
+      </div>
     </div>
   </fieldset>
-</div>
+</form>
 
-<form class="form-horizontal">
+<form name="formAlert" class="form-horizontal">
   <fieldset>
     <legend>Alerts</legend>
     <div class="form-group">
@@ -167,36 +139,21 @@
     <div class="form-group" ng-show="settings.alertEnable">
       <label for="alertDevice" class="control-label col-lg-2">Device Name</label>
       <div class="col-lg-10">
-        <input type="text" id="alertDevice" ng-model="settings.alertDevice" class="form-control">
+        <input type="text" id="alertDevice" ng-model="settings.alertDevice" ng-required="settings.alertEnable" class="form-control">
       </div>
     </div>
     <div class="form-group" ng-show="settings.alertEnable">
       <label for="alertEmail" class="control-label col-lg-2">E-mail</label>
       <div class="col-lg-10">
-        <input type="email" id="alertEmail" ng-model="settings.alertEmail" class="form-control">
+        <input type="email" id="alertEmail" ng-model="settings.alertEmail" ng-required="settings.alertEnable" class="form-control">
       </div>
     </div>
     <div class="form-group" ng-show="settings.alertEnable">
       <label for="alertSmtp" class="control-label col-lg-2">SMTP Server</label>
       <div class="col-lg-10">
-        <input type="text" id="alertSmtp" ng-model="settings.alertSmtp" class="form-control">
+        <input type="text" id="alertSmtp" ng-model="settings.alertSmtp" ng-required="settings.alertEnable" class="form-control">
         <p class="help-block" ng-show="settings.helpEnable">Please choose your own SMTP server.</p>
       </div>
     </div>
   </fieldset>
 </form>
-
-<form class="form-horizontal">
-  <fieldset>
-    <legend>Developer</legend>
-    <div class="form-group">
-      <div class="col-lg-10 col-offset-2">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" id="devEnable" ng-model="settings.devEnable"> Enable developer mode
-          </label>
-        </div>
-      </div>
-    </div>
-  </fieldset>
-</div>
