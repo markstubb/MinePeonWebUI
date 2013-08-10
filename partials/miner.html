@@ -1,10 +1,10 @@
 <br />
 <div class="row">
 	<div class="col-lg-3">
-		<button type="button" ng-click="sync('pools');sync('options')" class="btn btn-primary btn-block">Reload miner.user.conf</button>
+		<button type="button" ng-click="poolBack();optionBack()" class="btn btn-primary btn-block">Reload miner.user.conf</button>
 	</div>
 	<div class="col-lg-3">
-		<button type="button" ng-click="" class="btn btn-primary btn-block" disabled>button</button>
+		<button type="button" ng-click="sync('pools','restart',1)" class="btn btn-warning btn-block">Restart miner now</button>
 	</div>
 	<div class="col-lg-3">
 		<button type="button" ng-click="" class="btn btn-primary btn-block" disabled>button</button>

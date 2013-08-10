@@ -55,6 +55,10 @@ elseif (!empty($_REQUEST['pools'])) {
 		$r['info'][]=array('type' => 'success', 'text' => 'Pools config saved');
 		$r['info'][]=minerRestart();
 	}
+	// Restart miner
+	elseif(!empty($newdata)&&$newdata=='restart'){
+		$r['info'][]=minerRestart();
+	}
 	// Load current settings
 	else{
 		$r['info'][]=array('type' => 'success', 'text' => 'Pools config loaded');
