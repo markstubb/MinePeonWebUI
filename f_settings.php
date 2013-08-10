@@ -21,7 +21,7 @@ if (!empty($_REQUEST['pass'])) {
 // Manage settings
 elseif (!empty($_REQUEST['settings'])) {
 	$newdata   = json_decode($_REQUEST['settings'], true);
-	$r['data'] = json_decode(file_get_contents('/opt/minepeon/etc/'.$settingsConfig), true);
+	$r['data'] = json_decode(@file_get_contents('/opt/minepeon/etc/'.$settingsConfig), true);
 
 	// Sync current with new settings
 	if(!empty($newdata)&&is_array($newdata)){
@@ -43,7 +43,7 @@ elseif (!empty($_REQUEST['settings'])) {
 // Manage pools
 elseif (!empty($_REQUEST['pools'])) {
 	$newdata   = json_decode($_REQUEST['pools'], true);
-	$r['data'] = json_decode(file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
+	$r['data'] = json_decode(@file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
 
 	// Overwrite current with new pools
 	if(!empty($newdata)&&is_array($newdata)){
@@ -84,7 +84,7 @@ elseif (!empty($_REQUEST['options'])) {
 	}
 	// Load current settings
 	else{
-		$olddata = json_decode(file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
+		$olddata = json_decode(@file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
 
 		if(!empty($olddata)&&is_array($olddata)){
 			$r['data']=$olddata;
@@ -96,10 +96,12 @@ elseif (!empty($_REQUEST['options'])) {
 	}
 
 	// cgminer => Angular (strings => objects)
-	$temp=$r['data']; unset($r['data']); $i=0;
-	foreach ($temp as $key => $value) {
-		$r['data'][$i]['key']=$key;
-		$r['data'][$i++]['value']=$value;
+	if(!empty($r['data'])&&is_array($r['data'])){
+		$temp=$r['data']; unset($r['data']); $i=0;
+		foreach ($temp as $key => $value) {
+			$r['data'][$i]['key']=$key;
+			$r['data'][$i++]['value']=$value;
+		}
 	}
 }
 
