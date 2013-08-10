@@ -27,7 +27,7 @@ function recurse_copy($src,$dst,$level=3) {
 				$c=recurse_copy($src . '/' . $file,$dst . '/' . $file,$level-1); 
 			} 
 			else {
-				$c=copy($src . '/' . $file,$dst . '/' . $file);
+				$c=@copy($src . '/' . $file,$dst . '/' . $file);
 				$r["files"][]=array("file"=>pathinfo($dst,PATHINFO_FILENAME),"success"=>$c);
 			}
 			$success=$success&&$c;
@@ -50,7 +50,7 @@ if (!is_writable($dstDir)) {
 }
 
 // Predicting errors for debugging
-if (!is_readable($src)) {
+if (!@is_readable($src)) {
 	$r['error'][]="Source file is not readable";
 }
 elseif (is_file($src)&&is_dir($dst) || is_dir($src)&&is_file($dst)) {
@@ -61,9 +61,9 @@ elseif (is_file($dst)) {
 }
 
 // Copy it already!
-if (is_file($src)) {
+if (@is_file($src)) {
 	$r['type']="file";
-	if (!copy($src, $dst)) {
+	if (!@copy($src, $dst)) {
 		$r["files"][0]=array("file"=>pathinfo($dst,PATHINFO_FILENAME),"success"=>false);
 	}
 	else{
@@ -71,7 +71,7 @@ if (is_file($src)) {
 		$r["files"][0]=array("file"=>pathinfo($dst,PATHINFO_FILENAME),"success"=>true);
 	}
 }
-elseif (is_dir($src)) {
+elseif (@is_dir($src)) {
 	$r['type']="dir";
 	if (recurse_copy($src, $dst)) {
 		$r['success']=true;

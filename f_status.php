@@ -7,14 +7,14 @@ header('Content-type: application/json');
 
 function cgminer($command, $parameter='') {
   // Setup socket
-  $client = stream_socket_client("tcp://127.0.0.1:4028", $errno, $errorMessage);
+  $client = @stream_socket_client('tcp://127.0.0.1:4028', $errno, $errorMessage);
 
   // Socket failed
-  if ($client === false) {
+  if (empty($client)) {
     return false;
   }
   // Socket success
-  fwrite($client, json_encode(array('command'=>$command)));
+  fwrite($client, json_encode(array('command'=>$command,'parameter'=>$parameter)));
   // Get response
   $response = json_decode(preg_replace('/[^[:alnum:][:punct:]]/','',stream_get_contents($client)), true);
   fclose($client);
@@ -27,19 +27,21 @@ function cgminer($command, $parameter='') {
 $devs=cgminer('devs');
 $pools=cgminer('pools');
 
-if($devs!==false){
+if(!empty($devs['DEVS'])){
   $r['status']['devs'] = $devs['DEVS'];
 }
-if($pools!==false){
+if(!empty($pools['POOLS'])){
   $r['status']['pools'] = $pools['POOLS'];
+  $r['status']['minerUp'] = true;
+  $r['status']['minerDown'] = false;
+}
+else{
+  $r['status']['minerUp'] = false;
+  $r['status']['minerDown'] = true;
 }
 
-// Status of cgminer
-$r['status']['minerUp'] = $pools!==false;
-$r['status']['minerDown'] = $pools===false;
-
 // Debug miner data
-if(isset($_REQUEST['dev'])){
+if(!empty($_REQUEST['dev'])){
   $r['status']['devs'][]=array('Name'=>'Hoeba','ID'=>0,'Temperature'=>rand(20,35),'MHS5s'=>rand(00,1000000000),'MHSav'=>rand(600000,800000),'LongPoll'=>'N','Getworks'=>200,'Accepted'=>rand(70,200),'Rejected'=>rand(1,10),'HardwareErrors'=>rand(0,50),'Utility'=>1.2,'LastShareTime'=>time()-rand(0,10));
   $r['status']['devs'][]=array('Name'=>'Debug','ID'=>1,'Temperature'=>rand(20,35),'MHS5s'=>rand(0,10000000),'MHSav'=>rand(100000,120000),'LongPoll'=>'N','Getworks'=>1076,'Accepted'=>1324,'Rejected'=>1,'HardwareErrors'=>46,'Utility'=>1.2,'LastShareTime'=>time()-rand(0,40));
   $r['status']['devs'][]=array('Name'=>'Wut','ID'=>2,'Temperature'=>rand(20,35),'MHS5s'=>rand(0,100000),'MHSav'=>rand(6000,8000),'LongPoll'=>'N','Getworks'=>1076,'Accepted'=>1324,'Rejected'=>1,'HardwareErrors'=>46,'Utility'=>1.2,'LastShareTime'=>time()-rand(0,300));
@@ -55,17 +57,19 @@ $Rejected = 0;
 $HardwareErrors = 0;
 $Utility = 0;
 
-foreach ($r['status']['devs'] as $id => $dev) {
-  if ($dev['MHS5s'] > 0) {
-    $devices++;
-    $MHS5s = $MHS5s + $dev['MHS5s'];
-    $MHSav = $MHSav + $dev['MHSav'];
-    $Accepted = $Accepted + $dev['Accepted'];
-    $Rejected = $Rejected + $dev['Rejected'];
-    $HardwareErrors = $HardwareErrors + $dev['HardwareErrors'];
-    $Utility = $Utility + $dev['Utility'];
+if(!empty($r['status']['devs'])){
+  foreach ($r['status']['devs'] as $id => $dev) {
+    if ($dev['MHS5s'] > 0) {
+      $devices++;
+      $MHS5s = $MHS5s + $dev['MHS5s'];
+      $MHSav = $MHSav + $dev['MHSav'];
+      $Accepted = $Accepted + $dev['Accepted'];
+      $Rejected = $Rejected + $dev['Rejected'];
+      $HardwareErrors = $HardwareErrors + $dev['HardwareErrors'];
+      $Utility = $Utility + $dev['Utility'];
+    }
+    $r['status']['devs'][$id]['TotalShares']=$dev['Accepted']+$dev['Rejected']+$dev['HardwareErrors'];
   }
-  $r['status']['devs'][$id]['TotalShares']=$dev['Accepted']+$dev['Rejected']+$dev['HardwareErrors'];
 }
 
 $r['status']['dtot']=array(
@@ -79,7 +83,7 @@ $r['status']['dtot']=array(
   'TotalShares'=>$Accepted+$Rejected+$HardwareErrors);
 
 // Set q to 0 if not given
-if(isset($_REQUEST['all'])){
+if(!empty($_REQUEST['all'])){
   $r['status']['uptime'] = explode(' ', exec('cat /proc/uptime'));
   $r['status']['temp'] = substr(exec('/opt/vc/bin/vcgencmd measure_temp'), 5, -2);
 }

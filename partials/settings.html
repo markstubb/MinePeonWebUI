@@ -1,6 +1,6 @@
+<h3>User</h3>
 <form name="formUser" class="form-horizontal">
   <fieldset>
-    <legend>User</legend>
     <div class="form-group">
       <label for="helpEnable" class="control-label col-lg-2">Help text</label>
       <div class="col-lg-10">
@@ -21,23 +21,27 @@
     </div>
     <div class="form-group">
       <label for="userPassword" class="control-label col-lg-2">New Password</label>
-      <div class="col-lg-10">
+      <div class="col-lg-5">
         <input type="password" placeholder="New password" id="userPassword" name="userPassword" ng-model="userPassword" class="form-control">
-        <p class="help-block" ng-show="settings.helpEnable">You need this password to access this webinterface.</p>
-        <p class="help-block" ng-show="settings.helpEnable">An empty password will not be saved.</p>
+      </div>
+      <div class="col-lg-5">
+        <input type="password" placeholder="Repeat new password" id="userPassword2" name="userPassword2" ng-model="userPassword2" class="form-control" ng->
       </div>
     </div>
-    <div class="form-group" ng-show="formUser.userPassword.$dirty">
+    <div class="form-group">
       <div class="col-lg-10 col-offset-2">
-        <button type="button" class="btn btn-success" ng-click="sync('pass',userPassword)">Save password</button>
+        <p class="help-block" ng-show="settings.helpEnable">You need this password to access this webinterface. Changing it will log you out.</p>
+        <p class="help-block" ng-show="settings.helpEnable">An empty password will not be saved.</p>
+        <button type="button" class="btn btn-success" ng-click="sync('pass',userPassword)" ng-show="formUser.userPassword.$dirty"
+        ng-disabled="userPassword!=userPassword2">Save password</button>
       </div>
     </div>
   </fieldset>
 </form>
 
+<h3>Mining</h3>
 <form name="formMining" class="form-horizontal">
   <fieldset>
-    <legend>Mining</legend>
     <div class="form-group">
       <label for="miningRecover" class="control-label col-lg-2">Monitor process</label>
       <div class="col-lg-10">
@@ -124,9 +128,9 @@
   </fieldset>
 </form>
 
+<h3>Alerts</h3>
 <form name="formAlert" class="form-horizontal">
   <fieldset>
-    <legend>Alerts</legend>
     <div class="form-group">
       <div class="col-lg-10 col-offset-2">
         <div class="checkbox">

@@ -21,10 +21,10 @@ if (!empty($_REQUEST['pass'])) {
 // Manage settings
 elseif (!empty($_REQUEST['settings'])) {
 	$newdata   = json_decode($_REQUEST['settings'], true);
-	$r['data'] = json_decode(file_get_contents('/opt/minepeon/etc/'.$settingsConfig), true);
+	$r['data'] = json_decode(@file_get_contents('/opt/minepeon/etc/'.$settingsConfig), true);
 
 	// Sync current with new settings
-	if(is_array($newdata)){
+	if(!empty($newdata)&&is_array($newdata)){
 		foreach ($newdata as $key => $value) {
 			$r['data'][$key]=$value;
 		}
@@ -43,16 +43,21 @@ elseif (!empty($_REQUEST['settings'])) {
 // Manage pools
 elseif (!empty($_REQUEST['pools'])) {
 	$newdata   = json_decode($_REQUEST['pools'], true);
-	$r['data'] = json_decode(file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
+	$r['data'] = json_decode(@file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
 
 	// Overwrite current with new pools
-	if(is_array($newdata)){
+	if(!empty($newdata)&&is_array($newdata)){
 		unset($r['data']['pools']);
 		$r['data']['pools']=$newdata;
 		// Write back to file
 		file_put_contents('/opt/minepeon/etc/'.$minerUserConfig, json_encode($r['data'], JSON_PRETTY_PRINT));
+		file_put_contents('/opt/minepeon/etc/miner.user.conf',   json_encode($r['data'], JSON_PRETTY_PRINT));
 		$r['info'][]=array('type' => 'success', 'text' => 'Pools config saved');
-		$r+=minerRestart();
+		$r['info'][]=minerRestart();
+	}
+	// Restart miner
+	elseif(!empty($newdata)&&$newdata=='restart'){
+		$r['info'][]=minerRestart();
 	}
 	// Load current settings
 	else{
@@ -64,23 +69,24 @@ elseif (!empty($_REQUEST['pools'])) {
 elseif (!empty($_REQUEST['options'])) {
 	$newdatatemp = json_decode($_REQUEST['options'], true);
 
-	// Angular => cgminer (objects => strings)
-	foreach ($newdatatemp as $value) {
-		$newdata[$value['key']]=$value['value'];
-	}
-
 	// Overwrite current with new config
-	if(is_array($newdata)){
+	if(!empty($newdata)&&is_array($newdata)){
+
+		// Angular => cgminer (objects => strings)
+		foreach ($newdatatemp as $value) {
+			$newdata[$value['key']]=$value['value'];
+		}
+
 		file_put_contents('/opt/minepeon/etc/'.$minerUserConfig, json_encode($newdata, JSON_PRETTY_PRINT));
 		$r['data']=$newdata;
 		$r['info'][]=array('type' => 'success', 'text' => 'Miner config saved');
-		$r+=minerRestart();
+		$r['info'][]=minerRestart();
 	}
 	// Load current settings
 	else{
-		$olddata = json_decode(file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
+		$olddata = json_decode(@file_get_contents('/opt/minepeon/etc/'.$minerUserConfig), true);
 
-		if(is_array($olddata)){
+		if(!empty($olddata)&&is_array($olddata)){
 			$r['data']=$olddata;
 			$r['info'][]=array('type' => 'success', 'text' => 'Miner config loaded');
 		}
@@ -90,10 +96,12 @@ elseif (!empty($_REQUEST['options'])) {
 	}
 
 	// cgminer => Angular (strings => objects)
-	$temp=$r['data']; unset($r['data']); $i=0;
-	foreach ($temp as $key => $value) {
-		$r['data'][$i]['key']=$key;
-		$r['data'][$i++]['value']=$value;
+	if(!empty($r['data'])&&is_array($r['data'])){
+		$temp=$r['data']; unset($r['data']); $i=0;
+		foreach ($temp as $key => $value) {
+			$r['data'][$i]['key']=$key;
+			$r['data'][$i++]['value']=$value;
+		}
 	}
 }
 
@@ -110,18 +118,16 @@ echo json_encode($r);
 
 function minerRestart(){
 	// Setup socket
-	$client = stream_socket_client('tcp://127.0.0.1:4028', $errno, $errorMessage);
+	$client = @stream_socket_client('tcp://127.0.0.1:4028', $errno, $errorMessage);
 
 	// Socket failed
-	if ($client === false) {
-		$r['info'][]=array('type' => 'danger', 'text' => 'Could not restart cgminer because: '.$errno.' '.$errorMessage);
+	if (empty($client)) {
+		return array('type' => 'danger', 'text' => 'Could not restart cgminer because: '.$errno.' '.$errorMessage);
 	}
+
 	// Socket success
-	else{
-		fwrite($client, json_encode(array('command'=>'restart')));
-		fclose($client);
-		$r['info'][]=array('type' => 'info', 'text' => 'Cgminer restarting');
-	}
-	return $r;
+	fwrite($client, json_encode(array('command'=>'restart')));
+	fclose($client);
+	return array('type' => 'info', 'text' => 'Cgminer restarting');
 }
 ?>

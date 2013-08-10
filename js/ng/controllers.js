@@ -166,6 +166,7 @@ angular.module('Peon.controllers', [])
 
   $scope.poolAdd = function() {
     $scope.pools.push({});
+    $scope.poolForm.$setDirty()
   };
   $scope.poolRemove = function(index) {
     $scope.pools.splice(index,1);
@@ -176,12 +177,13 @@ angular.module('Peon.controllers', [])
     $scope.poolForm.$setPristine();
   };
   $scope.poolBack = function() {
-    $scope.sync('pools');
+    $scope.sync('pools',0,1);
     $scope.poolForm.$setPristine();
   };
 
   $scope.optionAdd = function() {
     $scope.options.push({});
+    $scope.optionForm.$setDirty()
   };
   $scope.optionRemove = function(index) {
     $scope.options.splice(index,1);
@@ -192,7 +194,7 @@ angular.module('Peon.controllers', [])
     $scope.optionForm.$setPristine();
   };
   $scope.optionBack = function() {
-    $scope.sync('options');
+    $scope.sync('options',0,1);
     $scope.optionForm.$setPristine();
   };
 })

@@ -10,15 +10,19 @@ $backupFolder='/opt/minepeon/etc/backup/';
 
 // Scan backup folder and remove . & ..
 $items = @scandir($backupFolder);
-array_shift($items);
-array_shift($items);
+if(!empty($items)){
+	array_shift($items);
+	array_shift($items);
+}
 
 // Scan subfolders
 foreach ($items as $key => $value) {
 	$r['data'][$key]['dir']=$value;
 	$r['data'][$key]['items']=@scandir($backupFolder."/".$value);
-	array_shift($r['data'][$key]['items']);
-	array_shift($r['data'][$key]['items']);
+	if(!empty($r['data'][$key]['items'])){
+		array_shift($r['data'][$key]['items']);
+		array_shift($r['data'][$key]['items']);
+	}
 }
 
 echo json_encode($r);
