@@ -9,9 +9,10 @@ angular.module('Peon.controllers', [])
 .controller('CtrlMain', function($scope,$http,$timeout) {
   // Settings
   $scope.settings={};
-  var oldSettings={};
+  $scope.settingsMaster={};
   // Pools
   $scope.pools={};
+  $scope.options={};
   // Status
   $scope.status={};
   $scope.status.minerUp=true;
@@ -31,36 +32,43 @@ angular.module('Peon.controllers', [])
         angular.forEach(d['info'], function(v,k) {$scope.alerts.push(v);});// Add to existing
       }
       if(action=='settings'){
-        angular.copy(d['data'],$scope.settings);
-        angular.copy(d['data'],oldSettings);
+        $scope.settings=angular.copy(d['data']);
+        $scope.settingsMaster=angular.copy(d['data']);
       }
       else if(action=='pools'){
         $scope.pools=d['data']['pools'];
       }
+      else if(action=='options'){
+        $scope.options=d['data'];
+      }
       else if(action=='timezone'){
         $scope.settings.time=d.data.time;
-        oldSettings.time=d.data.time;
+        $scope.settingsMaster.time=d.data.time;
       }
     });
-  };
-  // Sync settings with delay
+  }
   $scope.syncDelay = function(ms,action,data,alert) {
     action = action || 'settings';
-    data = data || 'load';
+    data = data || false;
     ms = ms || 1000;
-    var dothis = function(){
+    var syncNow = function(){
       $scope.sync(action,data,alert);
     }
-    $timeout(dothis, ms);
-  };
+    return $timeout(syncNow, ms);
+  }
+
+  // Sync settings
+  $scope.sync('settings')
+  $scope.syncDelay(500,'pools');
+  $scope.syncDelay(900,'options');
 
   // Show save button? Should be done with ngform.$dirty
   $scope.saveHide = function() {
-    return angular.equals( $scope.settings,oldSettings,true);
+    return angular.equals( $scope.settings,$scope.settingsMaster);
   };
   // Discard settings
   $scope.back = function() {
-    angular.copy(oldSettings,$scope.settings);
+    $scope.settings=angular.copy($scope.settingsMaster);
   };
 
   // Get status and save in scope
@@ -75,13 +83,10 @@ angular.module('Peon.controllers', [])
         $scope.statusProm.push($timeout($scope.tick, $scope.statusRate));
       }
     });
+    console.log($scope.settingsMaster)
+    console.log($scope.settings)
   }
   $scope.tick(0,1);
-
-  // Load current settings
-  $scope.sync();
-  $scope.syncDelay(1000,'pools');
-  $scope.syncDelay(1500,'options');
 
   // Set rate and update status
   $scope.setRate = function(value) {
@@ -89,6 +94,11 @@ angular.module('Peon.controllers', [])
     $scope.statusRate=value>=500?value:600001;
     $scope.tick(0,1);
   };
+  
+  $scope.optionArr={};
+  $scope.$watch('options', function(b,a) {
+    angular.forEach(b, function(v,k) {$scope.optionArr[k]={key:k};});
+  });
 })
 
 
@@ -98,16 +108,16 @@ angular.module('Peon.controllers', [])
   // Make alerts disappear after 10 seconds
   $scope.$watch('alerts', function(b,a) {
     if(alertProm){}
-    else if(b.length>3){
-      alertProm=$timeout($scope.alertDismiss, 1);
-    }
-    else if(b.length>1){
-      alertProm=$timeout($scope.alertDismiss, 1000);
-    }
-    else if(b.length==1){
-      alertProm=$timeout($scope.alertDismiss, 3000);
-    }
-  }, true);
+      else if(b.length>3){
+        alertProm=$timeout($scope.alertDismiss, 1);
+      }
+      else if(b.length>1){
+        alertProm=$timeout($scope.alertDismiss, 1000);
+      }
+      else if(b.length==1){
+        alertProm=$timeout($scope.alertDismiss, 3000);
+      }
+    }, true);
   $scope.alertDismiss = function() {
     alertProm=$timeout($scope.alertShift, 1010);
     $('.alert-top').addClass('alert-dismiss');
@@ -152,20 +162,7 @@ angular.module('Peon.controllers', [])
 })
 
 
-.controller('CtrlMiner', function($scope,$http) {
-  $scope.miner={test:'haha'};
-  $http.get('f_settings.php?miner=false').success(function(d){
-    $scope.miner = angular.fromJson(d.data);
-  });
-})
-
-
-.controller('CtrlSettings', function($scope) {
-  // Load current settings
-  $scope.syncDelay(100);
-
-  // Load current pools data
-  $scope.syncDelay(1000,'pools');
+.controller('CtrlMiner', function($scope) {
 
   $scope.poolAdd = function() {
     $scope.pools.push({});
@@ -182,6 +179,26 @@ angular.module('Peon.controllers', [])
     $scope.sync('pools');
     $scope.poolForm.$setPristine();
   };
+
+  $scope.optionAdd = function() {
+    $scope.options.push({});
+  };
+  $scope.optionRemove = function(index) {
+    $scope.options.splice(index,1);
+    $scope.optionForm.$setDirty()
+  };
+  $scope.optionSave = function() {
+    $scope.sync('options',$scope.options,1);
+    $scope.optionForm.$setPristine();
+  };
+  $scope.optionBack = function() {
+    $scope.sync('options');
+    $scope.optionForm.$setPristine();
+  };
+})
+
+
+.controller('CtrlSettings', function($scope) {
 })
 
 
