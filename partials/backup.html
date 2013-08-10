@@ -64,6 +64,9 @@
 		<p class="form-inline">
 			<button type="button" class="btn btn-default" ng-click="restore()">Restore from <b>{{backups[restoring].dir}}</b></button>
 		</p>
+		<div ng-hide="backups[restoring].items" class="alert">
+			There seems to be no files in this backup, this can happen if permission was denied.
+		</div>
 		<div class="list-group">
 			<div ng-repeat="i in backups[restoring].items" class="list-group-item">
 				{{i}}
