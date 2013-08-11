@@ -1,31 +1,43 @@
 <?php
 /*
-- default: List all folders in a specified folder
-- download: Zip a folder and serve as download
+- default: Get a list of all backups and their content
+- backup: Copy list of items to backupFolder
+- export: Zip a folder and serve as download
 */
-header('Content-type: application/json');
 
 // Default backup folder
-$backupFolder='/opt/minepeon/etc/backup';
+$backupFolder= '/opt/minepeon/etc/backup/';
+$baseFolder  = '/opt/minepeon/';
 
-
+include('backup.inc.php');
 
 // Zip a folder and serve as download
-if (!empty($_REQUEST['download'])) {
+if (!empty($_REQUEST['export'])) {
 	$zipFolder='/opt/minepeon/etc/';
-	$zipData='backup/'.$_REQUEST['download'];
-	$zipName='minepeon-'.$_REQUEST['download'].'.zip';
+	$zipData='backup/'.$_REQUEST['export'];
+	$zipName='minepeon-'.$_REQUEST['export'].'.zip';
 
-	if(!file_exists($zipFolder.$zipName)){
-		exec('cd '.$zipFolder.$zipData.' ; zip -r '.$zipFolder.$zipName.' ./');
-	}
-	header('Content-Type: application/zip');
-	header('Content-Disposition: attachment; filename=' . basename($zipFolder.$zipName) . ';' );
-	header('Content-Transfer-Encoding: binary');
-	header('Content-Length: ' . filesize($zipFolder.$zipName));
-	readfile($zipFolder.$zipName);
-	unlink($zipFolder.$zipName);
+	serve_zip($zipFolder,$zipName,$zipData);
 	exit;
+}
+
+header('Content-type: application/json');
+
+// Copy list of items to backupFolder
+if (!empty($_REQUEST['backup'])) {
+	$items = json_decode($_REQUEST['backup'], true);
+
+	if(!empty($items)&&is_array($items)&&!empty($_REQUEST['name'])){
+		$r['info'][]=array('type' => 'success', 'text' => 'Backup saved');
+		foreach ($items as $key => $value) {
+			if($value['selected']){
+				$r['data'][$key]=secure_copy($baseFolder.'/'.$value['name'],$backupFolder.'/'.$_REQUEST['name'].'/'.$value['name']);
+			}
+		}
+	}
+	else{
+		$r['info'][]=array('type' => 'success', 'text' => 'Backup not saved');
+	}
 }
 
 // Get a list of all backups and their content

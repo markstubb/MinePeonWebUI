@@ -205,18 +205,17 @@ angular.module('Peon.controllers', [])
 
 
 .controller('CtrlBackup', function($scope,$http) {
-  $scope.thisFolder = "/opt/minepeon/";
-  $scope.backupFolder = "/opt/minepeon/etc/backup/";
-  $scope.backupName = GetDateTime()+"/";
+  $scope.thisFolder = '/opt/minepeon/';
+  $scope.backupFolder = '/opt/minepeon/etc/backup/';
+  $scope.backupName = GetDateTime();
   $scope.backups = [];
   $scope.restoring = 0;
   $scope.items = [
-  {selected:true,name:"etc/miner.user.conf"},
-  {selected:true,name:"etc/miner.conf"},
-  {selected:true,name:"etc/uipassword"},
-  {selected:true,name:"etc/version"},
-  {selected:true,name:"etc/minepeon.conf"},
-  {selected:true,name:"var/rrd"}
+  {selected:true,name:'etc/minepeon.conf'},
+  {selected:true,name:'etc/miner.user.conf'},
+  {selected:true,name:'etc/miner.conf'},
+  {selected:true,name:'etc/uipassword'},
+  {selected:true,name:'var/rrd'}
   ];
   
   $scope.addItem = function() {
@@ -232,28 +231,32 @@ angular.module('Peon.controllers', [])
   };
   
 
-  $scope.backup = function() {
-    var count = 0;
+  $scope.backupLocal = function() {
+    var promise = $http.get('f_backup.php?name='+$scope.backupName+'&backup='+angular.toJson($scope.items)).success(function(d){
+      angular.forEach(d.info, function(v,k) {$scope.alerts.push(v);});// Add to existing
+      angular.forEach(d.data, function(v,k) {
+        if(v.success){
+          $scope.items[k].bak=true;
+          $scope.items[k].selected=false;
+        }
+        else{
+          $scope.items[k].fail=true;
+        }
+      });// Add to existing
+      $scope.reload();
+    });
+    return promise;
+  };
 
-    // These get requests need some timeout I think, but it also works like this.
-    angular.forEach($scope.items, function(f,i) {
-      if(f.selected){
-        $http.get('f_copy.php?src='+$scope.thisFolder+f.name+'&dst='+$scope.backupFolder+$scope.backupName+f.name).success(function(d){
-          console.log(d.success);
-          if(d.success){
-            $scope.items[i].bak=true;
-            $scope.items[i].selected=false;
-          }
-          else{
-            $scope.items[i].fail=true;
-          }
-        });
-      }
+  $scope.backupExport = function() {
+    $scope.backupLocal().then(function(){
+      $scope.exportZip($scope.backupName);
     });
   };
 
-  $scope.download = function(i) {
-    window.location.href="f_backup.php?download="+$scope.backups[$scope.restoring].dir;
+  $scope.exportZip = function(name) {
+    name=name||$scope.backups[$scope.restoring].dir;
+    window.location.href='f_backup.php?export='+name;
   };
 
   $scope.choose = function(i) {
@@ -277,9 +280,9 @@ angular.module('Peon.controllers', [])
 
 function GetDateTime() {
   var now = new Date();
-  return [[now.getFullYear(),AddZero(now.getMonth() + 1),AddZero(now.getDate())].join(""), [AddZero(now.getHours()), AddZero(now.getMinutes())].join("")].join("-");
+  return [[now.getFullYear(),AddZero(now.getMonth() + 1),AddZero(now.getDate())].join(''), [AddZero(now.getHours()), AddZero(now.getMinutes())].join('')].join('-');
 }
 
 function AddZero(num) {
-  return (num >= 0 && num < 10) ? "0" + num : num + "";
+  return (num >= 0 && num < 10) ? '0' + num : num + '';
 }
