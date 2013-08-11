@@ -252,6 +252,9 @@ angular.module('Peon.controllers', [])
     });
   };
 
+  $scope.download = function(i) {
+    window.location.href="f_backup.php?download="+$scope.backups[$scope.restoring].dir;
+  };
 
   $scope.choose = function(i) {
     $scope.restoring=i;
