@@ -13,10 +13,10 @@ function cgminer($command, $parameter) {
 	$host = "127.0.0.1";
 	$port = 4028;
 
-	$client = stream_socket_client("tcp://$host:$port", $errno, $errorMessage);
+	$client = @stream_socket_client("tcp://$host:$port", $errno, $errorMessage);
 
 	if ($client === false) {
-		throw new UnexpectedValueException("Failed to connect: $errorMessage");
+		return false;
 	}
 	fwrite($client, $jsonCmd);
 	$response = stream_get_contents($client);
