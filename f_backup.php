@@ -23,8 +23,18 @@ if (!empty($_REQUEST['export'])) {
 
 header('Content-type: application/json');
 
+// Upload a zipped backup
+if (!empty($_FILES['file'])) {
+	$name = empty($_REQUEST['name']) ? @date('Ymd-Hi') : $_REQUEST['name'];
+	$r['error']=upload($_FILES['file'],$name);
+	if(empty($r['error'])){
+	  header('Location: advanced.html#/backup');
+		exit;
+	}
+}
+
 // Copy list of items to backupFolder
-if (!empty($_REQUEST['backup'])) {
+elseif (!empty($_REQUEST['backup'])) {
 	$items = json_decode($_REQUEST['backup'], true);
 
 	if(!empty($items)&&is_array($items)&&!empty($_REQUEST['name'])){
@@ -37,6 +47,26 @@ if (!empty($_REQUEST['backup'])) {
 	}
 	else{
 		$r['info'][]=array('type' => 'success', 'text' => 'Backup not saved');
+	}
+}
+
+// Copy folder from backupFolder back to baseFolder
+elseif (!empty($_REQUEST['restore']) && @is_dir($backupFolder.$_REQUEST['restore'])) {
+	$restore = $_REQUEST['restore'];
+
+	// Scan backup and remove . & ..
+	$items = @scandir($backupFolder.$restore);
+	if(!empty($items)){
+		array_shift($items);
+		array_shift($items);
+		$r['info'][]=array('type' => 'success', 'text' => 'Restored!');
+	}
+	else{
+		$r['info'][]=array('type' => 'danger', 'text' => 'Could not find backup');
+	}
+	foreach ($items as $key => $value) {
+		// To return success: $r['data'][$key]=...
+		secure_copy($backupFolder.$restore .'/'.$value,$baseFolder.'/'.$value);
 	}
 }
 
