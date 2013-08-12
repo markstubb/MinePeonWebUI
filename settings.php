@@ -223,19 +223,19 @@ include('menu.php');
       <div class="form-group alert-enabled <?php echo $settings['alertEnable']?"":"collapse"; ?>">
         <label for="alertDevice" class="control-label col-lg-3">Device Name</label>
         <div class="col-lg-9">
-          <input type="text" value="<?php echo $settings['alertDevice'] ?>" id="alertDevice" name="alertDevice" class="form-control">
+          <input type="text" value="<?php echo $settings['alertDevice'] ?>" id="alertDevice" name="alertDevice" class="form-control" placeholder="MinePeon">
         </div>
       </div>
       <div class="form-group alert-enabled <?php echo $settings['alertEnable']?"":"collapse"; ?>">
         <label for="alertEmail" class="control-label col-lg-3">E-mail</label>
         <div class="col-lg-9">
-          <input type="email" value="<?php echo $settings['alertEmail'] ?>" id="alertEmail" name="alertEmail" class="form-control">
+          <input type="email" value="<?php echo $settings['alertEmail'] ?>" id="alertEmail" name="alertEmail" class="form-control" placeholder="example@example.com">
         </div>
       </div>
       <div class="form-group alert-enabled <?php echo $settings['alertEnable']?"":"collapse"; ?>">
         <label for="alertSmtp" class="control-label col-lg-3">SMTP Server</label>
         <div class="col-lg-9">
-          <input type="text" value="<?php echo $settings['alertSmtp'] ?>" id="alertSmtp" name="alertSmtp" class="form-control">
+          <input type="text" value="<?php echo $settings['alertSmtp'] ?>" id="alertSmtp" name="alertSmtp" class="form-control" placeholder="smtp.myisp.com">
           <p class="help-block">Please choose your own SMTP server.</p>
         </div>
       </div>
