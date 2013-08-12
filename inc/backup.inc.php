@@ -18,6 +18,25 @@ function serve_zip($zipFolder,$zipName,$zipData){
 	unlink($zipFolder.'/'.$zipName);
 }
 
+// F: corresponds to the $_FILES var
+// name: filename to store
+function upload($f,$name){
+	// In case of warnings: return plaintext error
+	header('Content-type: text/plain');
+	if(empty($f) || $f['error']){
+		return 'File error, did you select a file?';
+	}
+
+	$tempFolder = '/opt/minepeon/etc/backup/';
+
+	if(!move_uploaded_file($f['tmp_name'], $tempFolder . 'temp' )){
+		return 'Could not move file. Permissions problem?';
+	}
+	// Unzip and remove zipfile
+	exec('cd '.$tempFolder.' ; unzip temp -d '.$name);
+	unlink($tempFolder.'temp');
+}
+
 // Copy a file or folder
 function secure_copy($src,$dst){
 	// Check destination folder
@@ -27,7 +46,7 @@ function secure_copy($src,$dst){
 	$r['dstDir']=$dstDir;
 
 	// Make dir if there isnt
-	if (!is_writable($dstDir)) {
+	if (!@is_writable($dstDir)) {
 		$r['mkDir']='Making destination dir!';
 		@mkdir($dstDir,0777,true); 
 	}

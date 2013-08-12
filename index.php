@@ -50,7 +50,7 @@ include('menu.php');
   <p class="text-center">
     <img src="rrd/mhsav-hour.png" alt="mhsav.png" />
     <img src="rrd/mhsav-day.png" alt="mhsav.png" /><br/>
-    <a href="#" id="chartToggle">Toggle charts</a>
+    <a href="#" id="chartToggle">Display extended charts</a>
   </p>
   <p class="text-center collapse chartMore">
     <img src="rrd/mhsav-week.png" alt="mhsav.png" />

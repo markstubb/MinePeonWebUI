@@ -204,7 +204,7 @@ angular.module('Peon.controllers', [])
 })
 
 
-.controller('CtrlBackup', function($scope,$http) {
+.controller('CtrlBackup', function($scope,$http,$timeout) {
   $scope.thisFolder = '/opt/minepeon/';
   $scope.backupFolder = '/opt/minepeon/etc/backup/';
   $scope.backupName = GetDateTime();
@@ -264,15 +264,25 @@ angular.module('Peon.controllers', [])
   };
 
   $scope.restore = function() {
-    console.log($scope.restoring)
+    $http.get('f_backup.php?restore='+$scope.backups[$scope.restoring].dir).success(function(d){
+      angular.forEach(d.info, function(v,k) {$scope.alerts.push(v);});// Add to existing
+      $scope.syncDelay(300,'settings');
+      $scope.syncDelay(600,'pools');
+      $scope.syncDelay(900,'options');
+    });
   };
 
-  $scope.reload = function() {
-    $http.get('f_backup.php').success(function(d){
-      if(d.data){
-        $scope.backups=d.data;
-      }
-    });
+  $scope.reload = function(wait) {
+    wait=wait||0;
+    var syncNow = function(){
+      $http.get('f_backup.php').success(function(d){
+        if(d.data){
+          $scope.backups=d.data;
+        }
+      });
+    }
+    //return 
+    $timeout(syncNow, wait);
   };
   $scope.reload();
 });
