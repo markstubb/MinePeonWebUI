@@ -143,19 +143,19 @@
     <div class="form-group" ng-show="settings.alertEnable">
       <label for="alertDevice" class="control-label col-lg-2">Device Name</label>
       <div class="col-lg-10">
-        <input type="text" id="alertDevice" ng-model="settings.alertDevice" ng-required="settings.alertEnable" class="form-control">
+        <input type="text" id="alertDevice" ng-model="settings.alertDevice" ng-required="settings.alertEnable" class="form-control" placeholder="MinePeon">
       </div>
     </div>
     <div class="form-group" ng-show="settings.alertEnable">
       <label for="alertEmail" class="control-label col-lg-2">E-mail</label>
       <div class="col-lg-10">
-        <input type="email" id="alertEmail" ng-model="settings.alertEmail" ng-required="settings.alertEnable" class="form-control">
+        <input type="email" id="alertEmail" ng-model="settings.alertEmail" ng-required="settings.alertEnable" class="form-control" placeholder="example@myisp.com">
       </div>
     </div>
     <div class="form-group" ng-show="settings.alertEnable">
       <label for="alertSmtp" class="control-label col-lg-2">SMTP Server</label>
       <div class="col-lg-10">
-        <input type="text" id="alertSmtp" ng-model="settings.alertSmtp" ng-required="settings.alertEnable" class="form-control">
+        <input type="text" id="alertSmtp" ng-model="settings.alertSmtp" ng-required="settings.alertEnable" class="form-control" placeholder="smtp.myisp.com">
         <p class="help-block" ng-show="settings.helpEnable">Please choose your own SMTP server.</p>
       </div>
     </div>
