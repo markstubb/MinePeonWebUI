@@ -17,7 +17,7 @@ if (isset($_POST['userPassword'])) {
 
 	if ($_POST['userPassword'] <> '') {
 		$file = '/opt/minepeon/etc/uipassword';
-		$content = 'minepeon:' . crypt($_POST['newpassword']);
+		$content = 'minepeon:' . crypt($_POST['userPassword']);
 
 		file_put_contents($file, $content);
 	}
